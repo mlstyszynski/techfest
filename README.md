@@ -9,11 +9,10 @@ In Section 1, you will configure MP-iBGP as the overlay between the leaf devices
 ## Environment
 
 Each team of 2 will be provided with a dedicated environment composed of the following
-- 2 vQFX Full, Spine
-- 4 vQFX Full, Leaf
-- 4 Ubuntu servers connected to the leaves
+- 3 x vQFX Spines
+- 4 x vQFX Leafs
+- 3 x vQFX CEs
 Work with your partner to divide and concur the tasks. 
-
 
 
 > All VMs are accessible from internet, so you can run everything from your laptop or from one of the ubuntu server provided
@@ -21,7 +20,7 @@ Work with your partner to divide and concur the tasks.
 
 
 
-### Physical connections
+### Physical connections - lab section 1
 ![Lab topology](evpn-vxlan-techfest_topo1.png?raw=true)
 
 # Guide for EVPN/VXLAN hands on lab
@@ -33,32 +32,12 @@ Confirm connectivity to the leaf lo0 addresses of all leaf devices. These are ex
 
 ```
 {master:0}
-root@LEAF-1> ping 2.2.2.2 
-PING 2.2.2.2 (2.2.2.2): 56 data bytes
-64 bytes from 2.2.2.2: icmp_seq=0 ttl=63 time=33.374 ms
-^C
---- 2.2.2.2 ping statistics ---
-1 packets transmitted, 1 packets received, 0% packet loss
-round-trip min/avg/max/stddev = 33.374/33.374/33.374/0.000 ms
+root@leaf1> ping 150.100.1.101
 
-{master:0}
-root@LEAF-1> ping 3.3.3.3    
-PING 3.3.3.3 (3.3.3.3): 56 data bytes
-64 bytes from 3.3.3.3: icmp_seq=0 ttl=62 time=84.899 ms
-64 bytes from 3.3.3.3: icmp_seq=1 ttl=62 time=75.714 ms
-^C
---- 3.3.3.3 ping statistics ---
-2 packets transmitted, 2 packets received, 0% packet loss
-round-trip min/avg/max/stddev = 75.714/80.306/84.899/4.593 ms
+root@leaf1> ping 150.250.1.100
 
-{master:0}
-root@LEAF-1> ping 4.4.4.4    
-PING 4.4.4.4 (4.4.4.4): 56 data bytes
-64 bytes from 4.4.4.4: icmp_seq=0 ttl=62 time=103.230 ms
-^C
---- 4.4.4.4 ping statistics ---
-1 packets transmitted, 1 packets received, 0% packet loss
-round-trip min/avg/max/stddev = 103.230/103.230/103.230/0.000 ms
+root@leaf1> ping 150.251.1.100
+
 ```
 ## Part 1: Steps for setting up overlay on Leaf 1, Leaf 2, Leaf 3 and Leaf 4
 
@@ -68,19 +47,18 @@ round-trip min/avg/max/stddev = 103.230/103.230/103.230/0.000 ms
 
 ```
 {master:0}[edit]
-root@LEAF-1# show protocols bgp group overlay
+root@leaf1# show protocols bgp group overlay
 type internal;
 local-address 1.1.1.1;
 family evpn {
     signaling;
 }
-local-as 65100;
-neighbor 2.2.2.2;
-neighbor 3.3.3.3;
-neighbor 4.4.4.4;
+local-as 64512;
+neighbor 1.1.1.11;
+neighbor 1.1.1.12;
 
 {master:0}[edit]
-root@LEAF-1#
+root@leaf1#
 ```
 
 ###### Leaf-2
