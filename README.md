@@ -21,7 +21,7 @@ Work with your partner to divide and concur the tasks.
 
 
 ### Physical connections - lab section 1
-![Lab topology-1](../topologies/evpn-vxlan-techfest_topo1.png)
+![Lab topology-1](topologies/evpn-vxlan-techfest_topo1.png)
 
 # Guide for EVPN/VXLAN hands on lab
 
