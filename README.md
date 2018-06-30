@@ -40,6 +40,18 @@ Use the username: `root` and password: `Juniper1!`
 
 Here's the access information to your POD : [my_pod_access_info](pod1/README.md)
 
+`Lab section 1 tasks`
+
+L1-task1: verify the full IPv4 underlay reachability within the  [section 1 topology](topologies/evpn-vxlan-techfest_topo1.png)
+
+L1-task2: provision the iBGP overlay with EVPN signaling at all DC-1 fabric nodes using the local ASN 64512 
+
+L1-taks3: provision and verify the underlay and overlay IP-ECMP within routing-options forwarding-options and protocol bgp level
+
+L1-task4: provision the switch-options level route-targets import/export 
+
+L1-task5: provision the protocol evpn encapsulation type, extended-vni list and the multicast-mode. Make sure the given vni has a  
+
 
 ## Solution guide for EVPN/VXLAN hands on lab - section 1
 
