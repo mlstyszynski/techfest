@@ -51,7 +51,7 @@ L1-taks3: provision and verify the underlay and overlay IP-ECMP within routing-o
 L1-task4: provision the VNI values at the VLAN level - create vlan100 with vxlan vni 5100 
 
 L1-task5: provision the protocol evpn encapsulation type, extended-vni list and the multicast-mode. 
-          Make sure each given vni under evpn vni-options has vrf-target " target:x:y " defined 
+          Make sure each given vni under evpn vni-options has vrf-target `target:x:y` defined 
 
 L1-task6: provision a global route-target community for the default-switch EVI - EVPN-route type-1 dedicated global target community
 
@@ -64,12 +64,12 @@ L1-task9: provision the switch-options vtep-source-interface, unique route-disti
           The global EVI vrf-target target:1:8888 is to be shared across all nodes of the DC-1 fabric
 
 L1-task10: provision the ESI 10 byte values all-active towards the CE1 and CE2
-           ESI leaf1/leaf2 towards CE1: 00:01:01:01:01:01:01:01:01:01
-           ESI leaf3/leaf4 towards CE1: 00:01:02:02:02:02:02:02:02:02
+           ESI leaf1/leaf2 towards CE1: `00:01:01:01:01:01:01:01:01:01`
+           ESI leaf3/leaf4 towards CE1: `00:01:02:02:02:02:02:02:02:02`
            
 L1-task11: provision the same active LACP system-id for the given AE interface towards the CE devices - same LACP system-id towards the given CE
-            LACP system-id leaf1/leaf2: 00:00:01:00:00:01
-            LACP system-id leaf3/leaf4: 00:00:02:00:00:02
+            LACP system-id leaf1/leaf2: `00:00:01:00:00:01`
+            LACP system-id leaf3/leaf4: `00:00:02:00:00:02`
                         
 L1-task12: provision the active LACP LAG interface at the CE1(dual homed to leaf1/leaf2) and CE2(dual homed to leaf3/leaf4)
 
