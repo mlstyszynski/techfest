@@ -57,7 +57,7 @@ Here's the access information to your POD : [my_pod_access_info](pod1/README.md)
 
 **L1-task7**: provision per VNI route-target communities to be used in the 
 
-**1-task8**: provision an import policy-options policy-statement MY-FAB-IMP-POLICY to accept the global EVI route-target community and accept the customized per VNI target communities.
+**L1-task8**: provision an import policy-options policy-statement MY-FAB-IMP-POLICY to accept the global EVI route-target community and accept the customized per VNI target communities.
           Make sure that when the new VNI gets provisioned it's not going to be rejected due to the final reject term. 
 
 **L1-task9**: provision the switch-options vtep-source-interface, unique route-distinguisher, vrf-import policy-statement configured in previous task as well as the global switch-options EVI vrf-target target:1:8888 (Type1-evpn route dedicated)
