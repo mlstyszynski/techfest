@@ -1,12 +1,16 @@
-# EVPN-VXLAN Lab 1 - Manual EVPN-VXLAN configuration
-## Description
+# EVPN-VXLAN lab Section 1 
+## Centrally Routed Bridging Overlay architecture
++ EVPN-VXLAN overlay configuration
 
-The goal of the lab is to establish EVPN-VXLAN type2 communication between CE1 (VNI 100) and CE2 (VNI 100) in POD-1 and Server3 (VNI 30)/ Server4 (VNI 40) in POD-2 . The baseline environment provided has EBGP set up for the Spine-Spine and Spine-Leaf underlay connections.
+`Lab section objectives`
+
+The goal of the section 1 of the present lab is to build the Centrally Routed Bridging Overlay architecture using EVPN-VXLAN 
+type2 communication between CE1 (VNI 100) and CE2 (VNI 100) in POD-1 and Server3 (VNI 30)/ Server4 (VNI 40) in POD-2 . The baseline environment provided has EBGP set up for the Spine-Spine and Spine-Leaf underlay connections.
  
 In Section 1, you will configure MP-iBGP as the overlay between the leaf devices. Section 2 will require you to establish EVPN type 2 (Asymmetric mode) communication between VNI 10 and VNI 30. In Section 3,  you will establish EVPN type 5 (Symmetric mode) communication between VNI 20 and VNI 40. Finally, in the same section, type 5 will be introduced on the remaining two leaf devices to facilitate full inter-VXLAN communication. 
 
 
-## Environment
+`Environment`
 
 Each team of 2 will be provided with a dedicated environment composed of the following
 - 3 x vQFX Spines
