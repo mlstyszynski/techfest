@@ -3,7 +3,7 @@
 
 `Lab section 1 objectives`
 
-The goal of the section 1 is to build the Centrally Routed Bridging Overlay architecture using the Juniper QFX series EVPN-VXLAN technologies to deliver L2 active/active forwarding withing the same broadcast-domain(same vlan-id) between the hosts connected to CE1 and CE2. 
+The goal of the section 1 is to build the Centrally Routed Bridging Overlay architecture using the Juniper QFX series EVPN-VXLAN technologies to deliver L2 active/active forwarding within the same broadcast-domain(same vlan-id) between the hosts connected to CE1 and CE2. 
 
 The end-host emulation is done at the CE1/CE2/CE3 by the IRB interfaces mapped to the given vlan. 
 
@@ -13,7 +13,7 @@ The inter-vni routing will be taking place at the spine1-re and spine2-re theref
  
 Spine3-re is deployed in DC-2 in a pure IP routed mode - connected to Spine1-re/Spine2-re underlay using eBGP based routing. 
 
-The ultimate goes of the lab section 1 is to deliver:
+The ultimate goal of the lab section 1 is to deliver:
  - L2 communication between CE1 (VNI-5100) and CE2 (VNI 5100)
  - L3 inter-vni communication CE-1 VNI-5100 to CE-2 VNI-5101 
  - L3 communication between the DC-1 and DC-2 CE3 connected hosts (emulated by irb.250)
