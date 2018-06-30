@@ -51,7 +51,7 @@ L1-taks3: provision and verify the underlay and overlay IP-ECMP within routing-o
 L1-task4: provision the VNI values at the VLAN level - create vlan100 with vxlan vni 5100 
 
 L1-task5: provision the protocol evpn encapsulation type, extended-vni list and the multicast-mode. 
-          Make sure each given vni has a vrf-target target:x:y defined 
+          Make sure each given vni under evpn vni-options has vrf-target " target:x:y " defined 
 
 L1-task6: provision a global route-target community for the default-switch EVI - EVPN-route type-1 dedicated global target community
 
