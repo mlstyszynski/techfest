@@ -1,31 +1,39 @@
 # EVPN-VXLAN lab Section 1 
 ## Centrally Routed Bridging Overlay architecture
 
-`Lab section objectives`
+`Lab section 1 objectives`
 
-The goal of the section 1 is to build the Centrally Routed Bridging Overlay architecture using the Juniper QFX series EVPN-VXLAN technologies. 
+The goal of the section 1 is to build the Centrally Routed Bridging Overlay architecture using the Juniper QFX series EVPN-VXLAN technologies to deliver L2 active/active forwarding withing the same broadcast-domain(same vlan-id) between the hosts connected to CE1 and CE2. 
 
-The iBGP EVPN-type2 routes will be used in order to advertise the MAC@ and MAC+IP between the leafs of the same fabric. 
+The end-host emulation is done at the CE1/CE2/CE3 by the IRB interfaces mapped to the given vlan. 
+
+The iBGP overlay using EVPN-type2 routes will be used in order to advertise the MAC@ and MAC+IP between the leafs of the same fabric. 
  
 The inter-vni routing will be taking place at the spine1-re and spine2-re therefore the MAC+IP routes will be injected by the spine1-re/Spine2-re on behalf of the layer 2 leafs. 
  
-CE1 (VNI 100) and CE2 (VNI 100) will have to communicate . The baseline environment provided has EBGP set up for the Spine-Spine and Spine-Leaf underlay connections.
- 
-In Section 1, you will configure MP-iBGP as the overlay between the leaf devices. Section 2 will require you to establish EVPN type 2 (Asymmetric mode) communication between VNI 10 and VNI 30. In Section 3,  you will establish EVPN type 5 (Symmetric mode) communication between VNI 20 and VNI 40. Finally, in the same section, type 5 will be introduced on the remaining two leaf devices to facilitate full inter-VXLAN communication. 
+Spine3-re is deployed in DC-2 in a pure IP routed mode - connected to Spine1-re/Spine2-re underlay using eBGP based routing. 
 
+The ultimate goes of the lab section 1 is to deliver:
+ - L2 communication between CE1 (VNI-5100) and CE2 (VNI 5100)
+ - L3 inter-vni communication CE-1 VNI-5100 to CE-2 VNI-5101 
+ - L3 communication between the DC-1 and DC-2 CE3 connected hosts (emulated by irb.250)
+
+Spine3-re is to be deployed in underlay eBGP mode and should advertise only the default-route via eBGP to the border-spines spine1-re/spine2-re. 
 
 `Environment`
 
-Each team of 2 will be provided with a dedicated environment composed of the following
-- 3 x vQFX Spines
-- 4 x vQFX Leafs
-- 3 x vQFX CEs
-Work with your partner to divide and concur the tasks. 
+The  environment is composed of the following vqfx nodes: 
+- 3 x vQFX Spines ( Spine1-re/Spine2-re are the EVPN-VXLAN enabled spines in DC-1, Spine3-re in DC-2 is enabled with IP underlay routing only )
+- 4 x vQFX Leafs (L2 leafs in Section-1 and L2L3 leafs in Section-2)
+- 3 x vQFX CEs (CE1-re/CE2-re dual homed to EVPN-VXLAN fabric in DC-1, CE3-re is IP underlay connected to the Spine3-re in DC-2)
 
+The underlay eBGP is already pre-provisioned in order to deliver full IP reachability between the loopback0.0 IP@.  
 
-> All VMs are accessible from internet, so you can run everything from your laptop or from one of the ubuntu server provided
+> All VMs are accessible from internet, so you can run everything from your laptop using SSH sessions 
 
+Use the username: `root` and password: `Juniper1!`
 
+Here's the access information to your POD : [my_pod_access_info](pod1/README.md)
 
 
 ### Physical connections - lab section 1
