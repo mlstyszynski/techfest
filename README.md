@@ -79,13 +79,29 @@ L1-task14: verify using local IRB.100 interfaces at CE1/Ce2 that the L2 reachabi
 
 L1-task15: verify the EVPN database and EVPN route information for the MAC@ 00:01:99:00:00:01 and 00:01:99:00:00:02 
 
-L1-task16: provision at the spine1/spine2 the IRB-VGA IP gateway interfaces for vlan100 and vlan101
+L1-task16: provision at the spine1/spine2 the IRB-VGA IP gateway interfaces for vlan100 and vlan101 and allocate them into the routing-instance type virtual-router VRF-1
   
 L1-task17: make sure the CE1 irb.100 sourced IP can ping the CE2 irb.101 destination IP
 
 L1-task18: provision at leaf1/leaf2 an additional regular extended community for the VNI 5100 and make sure the T2 MAC and MAC+IP routes at the leaf3/leaf4 gets the routes with an additional community 
 
-  
+
+| VLAN       | VNI           | Route-target  |
+| ------------- |:-------------:| -----:|
+| vlan100      | 5100      | target:1:100 |
+| vlan101      | 5101      |  target:1:101 |
+
+
+| Node-name     | Underlay ASN  | Route-distinguisher  | lo0.0 IP@|
+| ------------- |:-------------:| -----:|:-------------:|
+| leaf1      | 65501 | 1.1.1.1:1 | 1.1.1.1|
+| leaf2      | 65502     |   1.1.1.2:1 | 1.1.1.2|
+| leaf3 | 65503      |    1.1.1.3:1 | 1.1.1.3|
+| leaf4 | 65504      |    1.1.1.4:1 | 1.1.1.4| 
+| spine1 | 65511      |    1.1.1.11:1 | 1.1.1.11|
+| spine2 | 65512      |    1.1.1.12:1 | 1.1.1.12| 
+
+
 ## Solution guide for EVPN/VXLAN hands on lab - section 1
 
 
