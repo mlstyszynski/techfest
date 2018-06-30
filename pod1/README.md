@@ -1,13 +1,8 @@
-# Lab - section 1 - EVPN-VXLAN - Centrally Routed Overlay - route Type-2
-![Lab topology-1](../topologies/evpn-vxlan-techfest_topo1.png)
-
-# Lab - section 2 - EVPN-VXLAN - Edge Routed Overlay - route Type-5
-![Lab topology-2](../topologies/evpn-vxlan-techfest_topo2.png)
-
 # lab ssh access info
 `root/Juniper1!`
 ```
 Techfest_EVPN_POD1:
+  ce1-re: ce1re-techfestevpnpod1-xlsg8wrz.srv.ravcloud.com
   ce3-re: ce3re-techfestevpnpod1-f0p3ck5w.srv.ravcloud.com
   ce2-re: ce2re-techfestevpnpod1-xlsg8wrz.srv.ravcloud.com
   leaf4-re: leaf4re-techfestevpnpod1-s5eblcod.srv.ravcloud.com
@@ -18,3 +13,10 @@ Techfest_EVPN_POD1:
   spine2-re: spine2re-techfestevpnpod1-nfchrqtc.srv.ravcloud.com
   spine1-re: spine1re-techfestevpnpod1-vvge9ijz.srv.ravcloud.com
 ```
+
+# Lab - section 1 - EVPN-VXLAN - Centrally Routed Overlay - route Type-2
+![Lab topology-1](../topologies/evpn-vxlan-techfest_topo1.png)
+
+# Lab - section 2 - EVPN-VXLAN - Edge Routed Overlay - route Type-5
+![Lab topology-2](../topologies/evpn-vxlan-techfest_topo2.png)
+
