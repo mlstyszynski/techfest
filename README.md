@@ -1,7 +1,12 @@
 # EVPN-VXLAN lab Section 1 
 ## Centrally Routed Bridging Overlay architecture
 
-`Lab section 1 objectives`
+
+`Lab topology`
+![Lab topology-1](topologies/evpn-vxlan-techfest_topo1.png)
+
+
+`Lab objectives`
 
 The goal of the section 1 is to build the Centrally Routed Bridging Overlay architecture using the Juniper QFX series EVPN-VXLAN technologies to deliver L2 active/active forwarding within the same broadcast-domain(same vlan-id) between the hosts connected to CE1 and CE2. 
 
@@ -20,7 +25,7 @@ The ultimate goal of the lab section 1 is to deliver:
 
 Spine3-re is to be deployed in underlay eBGP mode and should advertise only the default-route via eBGP to the border-spines spine1-re/spine2-re. 
 
-`Environment`
+`Lab environment`
 
 The  environment is composed of the following vqfx nodes: 
 - 3 x vQFX Spines ( Spine1-re/Spine2-re are the EVPN-VXLAN enabled spines in DC-1, Spine3-re in DC-2 is enabled with IP underlay routing only )
@@ -36,25 +41,27 @@ Use the username: `root` and password: `Juniper1!`
 Here's the access information to your POD : [my_pod_access_info](pod1/README.md)
 
 
-### Physical connections - lab section 1
-![Lab topology-1](topologies/evpn-vxlan-techfest_topo1.png)
-
-# Guide for EVPN/VXLAN hands on lab
+## Solution guide for EVPN/VXLAN hands on lab - section 1
 
 
-Confirm connectivity to the leaf lo0 addresses of all leaf devices. These are exchanged via the underlay eBGP session and will be required to setup the overlay iBGP session between leaf devices
+Confirm connectivity to the leaf lo0 addresses of all leaf devices. 
+These are exchanged via the underlay eBGP session and will be required to setup the overlay iBGP session between leaf devices
 
 #### Leaf - 1
 
 ```
 {master:0}
-root@leaf1> ping 150.100.1.101
+root@leaf1> ping 1.1.1.11 source 1.1.1.1
 
-root@leaf1> ping 150.250.1.100
+root@leaf1> ping 1.1.1.12 source 1.1.1.1
 
-root@leaf1> ping 150.251.1.100
+root@leaf1> ping 1.1.1.2 source 1.1.1.1
 
+root@leaf1> ping 1.1.1.3 source 1.1.1.1
+
+root@leaf1> ping 1.1.1.4 source 1.1.1.1
 ```
+
 ## Part 1: Steps for setting up overlay on Leaf 1, Leaf 2, Leaf 3 and Leaf 4
 
 #### Leaf-1 config
