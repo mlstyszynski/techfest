@@ -92,14 +92,14 @@ L1-task18: provision at leaf1/leaf2 an additional regular extended community for
 | vlan101      | 5101      |  target:1:101 |
 
 
-| Node-name     | Underlay ASN  | Route-distinguisher  | lo0.0 IP@|
-| ------------- |:-------------:| -----:|:-------------:|
-| leaf1      | 65501 | 1.1.1.1:1 | 1.1.1.1|
-| leaf2      | 65502     |   1.1.1.2:1 | 1.1.1.2|
-| leaf3 | 65503      |    1.1.1.3:1 | 1.1.1.3|
-| leaf4 | 65504      |    1.1.1.4:1 | 1.1.1.4| 
-| spine1 | 65511      |    1.1.1.11:1 | 1.1.1.11|
-| spine2 | 65512      |    1.1.1.12:1 | 1.1.1.12| 
+| Node-name     | Underlay ASN  | Overlay ASN | switch-options RD | lo0.0 IP@|
+| ------------- |:-------------:| -----:|-----:|:-------------:|
+| leaf1      | 65501 | 64512 | 1.1.1.1:1 | 1.1.1.1|
+| leaf2      | 65502 | 64512   |   1.1.1.2:1 | 1.1.1.2|
+| leaf3 | 65503      | 64512 |  1.1.1.3:1 | 1.1.1.3|
+| leaf4 | 65504      | 64512 |   1.1.1.4:1 | 1.1.1.4| 
+| spine1 | 65511      | 64512 |    1.1.1.11:1 | 1.1.1.11|
+| spine2 | 65512      | 64512 |    1.1.1.12:1 | 1.1.1.12| 
 
 
 ## Solution guide for EVPN/VXLAN hands on lab - section 1
