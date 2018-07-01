@@ -2,11 +2,11 @@
 ## Centrally Routed Bridging Overlay architecture
 
 
-`Lab topology`
+### Lab topology
 ![Lab topology-1](topologies/evpn-vxlan-techfest_topo1.png)
 
 
-####Lab objectives####
+### Lab objectives
 
 The goal of the section 1 is to build the Centrally Routed Bridging Overlay architecture using the Juniper QFX series EVPN-VXLAN technologies to deliver L2 active/active forwarding within the same broadcast-domain(same vlan-id) between the hosts connected to CE1 and CE2. 
 
@@ -25,7 +25,7 @@ The ultimate goal of the lab section 1 is to deliver:
 
 Spine3-re is to be deployed in underlay eBGP mode and should advertise only the default-route via eBGP to the border-spines spine1-re/spine2-re. 
 
-####Lab environment ####
+### Lab environment
 
 The  environment is composed of the following vqfx nodes: 
 - 3 x vQFX Spines ( Spine1-re/Spine2-re are the EVPN-VXLAN enabled spines in DC-1, Spine3-re in DC-2 is enabled with IP underlay routing only )
@@ -40,11 +40,11 @@ Use the username: `root` and password: `Juniper1!`
 
 Here's the access information to your POD : [my_pod_access_info](pod1/README.md)
 
-####Lab section 1 tasks ####
+### Lab section 1 tasks
 
-`L1-task1`: verify the full IPv4 underlay reachability within the  [section 1 topology](topologies/evpn-vxlan-techfest_topo1.png)
+#### L1-task1: verify the full IPv4 underlay reachability within the  [section 1 topology](topologies/evpn-vxlan-techfest_topo1.png)
 
-`L1-task2`: provision and verify the overlay iBGP(spine1/spine2 as overlay route-reflectors)  with EVPN signaling at all DC-1 fabric nodes using the local ASN 64512 as shown on the diagram
+#### L1-task2: provision and verify the overlay iBGP(spine1/spine2 as overlay route-reflectors)  with EVPN signaling at all DC-1 fabric nodes using the local ASN 64512 as shown on the diagram
 
 `L1-taks3`: provision and verify the underlay and overlay IP-ECMP within routing-options forwarding-options and protocol bgp level
 
