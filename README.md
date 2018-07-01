@@ -42,9 +42,9 @@ Here's the access information to your POD : [my_pod_access_info](pod1/README.md)
 
 ### Lab section 1 tasks
 
-#### L1-task1: verify the full IPv4 underlay reachability within the  [section 1 topology](topologies/evpn-vxlan-techfest_topo1.png)
+`L1-task1`: verify the full IPv4 underlay reachability within the  [section 1 topology](topologies/evpn-vxlan-techfest_topo1.png)
 
-#### L1-task2: provision and verify the overlay iBGP(spine1/spine2 as overlay route-reflectors)  with EVPN signaling at all DC-1 fabric nodes using the local ASN 64512 as shown on the diagram
+`L1-task2`: provision and verify the overlay iBGP(spine1/spine2 as overlay route-reflectors)  with EVPN signaling at all DC-1 fabric nodes using the local ASN 64512 as shown on the diagram
 
 `L1-taks3`: provision and verify the underlay and overlay IP-ECMP within routing-options forwarding-options and protocol bgp level
 
@@ -57,33 +57,33 @@ Here's the access information to your POD : [my_pod_access_info](pod1/README.md)
 
 `L1-task7`: provision per VNI route-target communities to be used in the 
 
-**L1-task8**: provision an import policy-options policy-statement MY-FAB-IMP-POLICY to accept the global EVI route-target community and accept the customized per VNI target communities.
+`L1-task8`: provision an import policy-options policy-statement MY-FAB-IMP-POLICY to accept the global EVI route-target community and accept the customized per VNI target communities.
           Make sure that when the new VNI gets provisioned it's not going to be rejected due to the final reject term. 
 
-**L1-task9**: provision the switch-options vtep-source-interface, unique route-distinguisher, vrf-import policy-statement configured in previous task as well as the global switch-options EVI vrf-target target:1:8888 (Type1-evpn route dedicated)
+`L1-task9`: provision the switch-options vtep-source-interface, unique route-distinguisher, vrf-import policy-statement configured in previous task as well as the global switch-options EVI vrf-target target:1:8888 (Type1-evpn route dedicated)
           The global EVI vrf-target target:1:8888 is to be shared across all nodes of the DC-1 fabric
 
-**L1-task10**: provision the ESI 10 byte values all-active towards the CE1 and CE2
+`L1-task10`: provision the ESI 10 byte values all-active towards the CE1 and CE2
            ESI leaf1/leaf2 towards CE1: `00:01:01:01:01:01:01:01:01:01`
            ESI leaf3/leaf4 towards CE1: `00:01:02:02:02:02:02:02:02:02`
            
-**L1-task11**: provision the same active LACP system-id for the given AE interface towards the CE devices - same LACP system-id towards the given CE
+`L1-task11`: provision the same active LACP system-id for the given AE interface towards the CE devices - same LACP system-id towards the given CE
             LACP system-id leaf1/leaf2: `00:00:01:00:00:01`
             LACP system-id leaf3/leaf4: `00:00:02:00:00:02`
                         
-**L1-task12**: provision the active LACP LAG interface at the CE1(dual homed to leaf1/leaf2) and CE2(dual homed to leaf3/leaf4)
+`L1-task12`: provision the active LACP LAG interface at the CE1(dual homed to leaf1/leaf2) and CE2(dual homed to leaf3/leaf4)
 
-**L1-task13**: provision the VLAN-ids on the LAG interfaces towards the CE1 and CE2
+`L1-task13`: provision the VLAN-ids on the LAG interfaces towards the CE1 and CE2
 
-**L1-task14**: verify using local IRB.100 interfaces at CE1/Ce2 that the L2 reachability works fine within the VNI 5100
+`L1-task14`: verify using local IRB.100 interfaces at CE1/Ce2 that the L2 reachability works fine within the VNI 5100
 
-**L1-task15**: verify the EVPN database and EVPN route information for the MAC@ 00:01:99:00:00:01 and 00:01:99:00:00:02 
+`L1-task15`: verify the EVPN database and EVPN route information for the MAC@ 00:01:99:00:00:01 and 00:01:99:00:00:02 
 
-**L1-task16**: provision at the spine1/spine2 the IRB-VGA IP gateway interfaces for vlan100 and vlan101 and allocate them into the routing-instance type virtual-router VRF-1
+`L1-task16`: provision at the spine1/spine2 the IRB-VGA IP gateway interfaces for vlan100 and vlan101 and allocate them into the routing-instance type virtual-router VRF-1
   
-**L1-task17**: make sure the CE1 irb.100 sourced IP can ping the CE2 irb.101 destination IP
+`L1-task17`: make sure the CE1 irb.100 sourced IP can ping the CE2 irb.101 destination IP
 
-**L1-task18**: provision at leaf1/leaf2 an additional regular extended community for the VNI 5100 and make sure the T2 MAC and MAC+IP routes at the leaf3/leaf4 gets the routes with an additional community 
+`L1-task18`: provision at leaf1/leaf2 an additional regular extended community for the VNI 5100 and make sure the T2 MAC and MAC+IP routes at the leaf3/leaf4 gets the routes with an additional community 
 
 
 | VLAN       | VNI           | Route-target  |
