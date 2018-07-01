@@ -8,7 +8,7 @@
 
 ### Lab objectives
 
-The goal of the section 1 is to build the Centrally Routed Bridging Overlay architecture using the Juniper QFX series EVPN-VXLAN technologies to deliver L2 active/active forwarding within the same broadcast-domain(same vlan-id) between the hosts connected to CE1 and CE2. 
+The goal of the section 1 is to build the **Centrally Routed Bridging Overlay** architecture using the Juniper QFX series EVPN-VXLAN technologies to deliver L2 active/active forwarding within the same broadcast-domain(same vlan-id) between the hosts connected to CE1 and CE2. 
 
 The end-host emulation is done at the CE1/CE2/CE3 by the IRB interfaces mapped to the given vlan. 
 
