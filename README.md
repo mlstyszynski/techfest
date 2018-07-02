@@ -76,7 +76,7 @@ Here's the access information to your POD : [my_pod_access_info](pod1/README.md)
 
 `L1-task13`: enable the VLAN-ids on the LAG interfaces towards the CE1 and CE2
 
-`L1-task14`: verify using local IRB.100 interfaces at CE1/CE2 that the L2 reachability works fine within the VNI 5100
+`L1-task14`: verify using local IRB.100 interfaces at CE1/CE2 that the L2 reachability works fine within the VNI 50100
 
 `L1-task15`: verify the EVPN database and EVPN route information for the MAC@ 00:01:99:00:00:01 and 00:01:99:00:00:02 
 
@@ -84,7 +84,7 @@ Here's the access information to your POD : [my_pod_access_info](pod1/README.md)
   
 `L1-task17`: make sure the CE1 irb.100 sourced IP can ping the CE2 irb.101 destination IP
 
-`L1-task18`: provision at leaf1 an additional regular extended community for the VNI 50100 and make sure the T2 MAC and MAC+IP routes at the leaf3/leaf4 gets the routes with an additional extended community 1:50100
+`L1-task18`: provision at spine1 with an additional regular extended community for the VNI 50100 and make sure the T2 MAC and MAC+IP routes at the leaf3/leaf4 gets the routes with an additional extended community 1:50100
 
 `L1-task19`: at the spine3-re enabled the core ip routing connectivity between the DC-1 and DC-2 using OSPFv2 NSSA area 0.0.0.1 nssa no-summaries default-lsa default-metric 101 inside the existing routing-instance MY-IPVPN-1 virtual-router instance-type. 
              Same virtual-router instance MY-IPVRF-1 should be enabled in area 0.0.0.1 nssa at spine1-re/spine2-re in order to receive the default route 0.0.0.0/0 
@@ -620,6 +620,7 @@ root@leaf4#
 ```
 
 ##### `L1-task12`: provision the active LACP protocol based aggregated AE interface at the CE1(dual homed to leaf1/leaf2) and CE2(dual homed to leaf3/leaf4)
+##### `L1-task13`: enable the VLAN-ids on the LAG interfaces towards the CE1 and CE2
 
 ###### CE1 example of provisioning the dual homed aggregated interface towards the leaf1/leaf2 
 ```
@@ -665,8 +666,367 @@ root@ce1#
 The similar approach should be taken for CE2 connectivity towards the leaf3/leaf4
 
 
+##### `L1-task14`: verify using local IRB.100 interfaces at CE1/CE2 that the L2 reachability works fine within the VNI 50100
 
+```
+root@ce1# run show interfaces terse routing-instance TEST 
+Interface               Admin Link Proto    Local                 Remote
+irb.100                 up    up   inet     150.100.1.100/24
 
+{master:0}[edit]
+root@ce1# 
+root@ce1# run ping 150.100.1.101 source 150.100.1.100 routing-instance TEST    
+PING 150.100.1.101 (150.100.1.101): 56 data bytes
+64 bytes from 150.100.1.101: icmp_seq=0 ttl=64 time=11.495 ms
+64 bytes from 150.100.1.101: icmp_seq=1 ttl=64 time=11.146 ms
+64 bytes from 150.100.1.101: icmp_seq=2 ttl=64 time=11.164 ms
+^C
+--- 150.100.1.101 ping statistics ---
+3 packets transmitted, 3 packets received, 0% packet loss
+round-trip min/avg/max/stddev = 11.146/11.268/11.495/0.160 ms
+
+{master:0}[edit]
+root@ce1# 
+```
+
+```
+root@leaf4# run show route table default-switch.evpn.0 evpn-mac-address 00:01:99:00:00:01 active-path  
+
+default-switch.evpn.0: 67 destinations, 131 routes (67 active, 0 holddown, 0 hidden)
++ = Active Route, - = Last Active, * = Both
+
+2:1.1.1.7:1::50100::00:01:99:00:00:01/304 MAC/IP        
+                   *[BGP/170] 00:01:03, localpref 100, from 1.1.1.11
+                      AS path: I, validation-state: unverified
+                      to 10.10.17.1 via et-0/0/2.0
+                    > to 10.10.18.1 via et-0/0/3.0
+2:1.1.1.7:1::50100::00:01:99:00:00:01::150.100.1.100/304 MAC/IP        
+                   *[BGP/170] 00:00:34, localpref 100, from 1.1.1.12
+                      AS path: I, validation-state: unverified
+                      to 10.10.17.1 via et-0/0/2.0
+                    > to 10.10.18.1 via et-0/0/3.0
+
+{master:0}[edit]
+root@leaf4# 
+root@leaf4# run show route table default-switch.evpn.0 evpn-mac-address 00:01:99:00:00:01 active-path extensive 
+
+default-switch.evpn.0: 67 destinations, 131 routes (67 active, 0 holddown, 0 hidden)
+2:1.1.1.7:1::50100::00:01:99:00:00:01/304 MAC/IP (2 entries, 1 announced)
+        *BGP    Preference: 170/-101
+                Route Distinguisher: 1.1.1.7:1
+                Next hop type: Indirect, Next hop index: 0
+                Address: 0xb622bd0
+                Next-hop reference count: 40
+                Source: 1.1.1.11
+                Protocol next hop: 1.1.1.7
+                Indirect next hop: 0x2 no-forward INH Session ID: 0x0
+                State: <Secondary Active Int Ext>
+                Local AS: 65506 Peer AS: 64512
+                Age: 1:27       Metric2: 0 
+                Validation State: unverified 
+                Task: BGP_64512_64512.1.1.1.11
+                Announcement bits (1): 0-default-switch-evpn 
+                AS path: I (Originator)
+                Cluster list:  1.1.1.11
+                Originator ID: 1.1.1.7
+                Communities: target:1:100 encapsulation:vxlan(0x8)
+                Import Accepted
+                Route Label: 50100
+                ESI: 00:01:02:02:02:02:02:02:02:02
+                Localpref: 100
+                Router ID: 1.1.1.11
+                Primary Routing Table bgp.evpn.0
+                Indirect next hops: 1
+                        Protocol next hop: 1.1.1.7
+                        Indirect next hop: 0x2 no-forward INH Session ID: 0x0
+                        Indirect path forwarding next hops: 2
+                                Next hop type: Router
+                                Next hop: 10.10.17.1 via et-0/0/2.0
+                                Session Id: 0x0
+                                Next hop: 10.10.18.1 via et-0/0/3.0
+                                Session Id: 0x0
+                        1.1.1.7/32 Originating RIB: inet.0
+                          Node path count: 1
+                          Forwarding nexthops: 2
+                                Nexthop: 10.10.17.1 via et-0/0/2.0
+
+2:1.1.1.7:1::50100::00:01:99:00:00:01::150.100.1.100/304 MAC/IP (2 entries, 1 announced)
+        *BGP    Preference: 170/-101
+                Route Distinguisher: 1.1.1.7:1
+                Next hop type: Indirect, Next hop index: 0
+                Address: 0xb622bd0
+                Next-hop reference count: 40
+                Source: 1.1.1.12
+                Protocol next hop: 1.1.1.7
+                Indirect next hop: 0x2 no-forward INH Session ID: 0x0
+                State: <Secondary Active Int Ext>
+                Local AS: 65506 Peer AS: 64512
+                Age: 58         Metric2: 0 
+                Validation State: unverified 
+                Task: BGP_64512_64512.1.1.1.12
+                Announcement bits (1): 0-default-switch-evpn 
+                AS path: I
+                Communities: target:1:100 encapsulation:vxlan(0x8)
+                Import Accepted
+                Route Label: 50100
+                ESI: 00:01:02:02:02:02:02:02:02:02
+                Localpref: 100
+                Router ID: 1.1.1.12
+                Primary Routing Table bgp.evpn.0
+                Indirect next hops: 1
+                        Protocol next hop: 1.1.1.7
+                        Indirect next hop: 0x2 no-forward INH Session ID: 0x0
+                        Indirect path forwarding next hops: 2
+                                Next hop type: Router
+                                Next hop: 10.10.17.1 via et-0/0/2.0
+                                Session Id: 0x0
+                                Next hop: 10.10.18.1 via et-0/0/3.0
+                                Session Id: 0x0
+                        1.1.1.7/32 Originating RIB: inet.0
+                          Node path count: 1
+                          Forwarding nexthops: 2
+                                Nexthop: 10.10.17.1 via et-0/0/2.0
+
+{master:0}[edit]
+root@leaf4# 
+
+```
+
+##### `L1-task15`: verify the EVPN database and EVPN route information for the MAC@ 00:01:99:00:00:01 and 00:01:99:00:00:02 
+
+```
+root@leaf4# run show evpn database mac-address 00:01:99:00:00:02 extensive 
+Instance: default-switch
+
+VN Identifier: 50100, MAC address:: 00:01:99:00:00:01
+  Source: 00:01:02:02:02:02:02:02:02:02, Rank: 1, Status: Active
+    Remote origin: 1.1.1.1
+    Timestamp: Jul 02 15:00:26 (0x5b3a3e0a)
+    State: <Remote-To-Local-Adv-Done>
+    IP address: 150.100.1.100
+      Remote origin: 1.1.1.1
+
+{master:0}[edit]
+root@leaf4# 
+```
+##### `L1-task16`: provision at the spine1/spine2 the IRB-VGA IP gateway interfaces for vlan100 and vlan101 and allocate them into the routing-instance type virtual-router VRF-1
+
+###### EVPN IRB-VGA (Virtual-Gateway-Address) configuration to be used at spine1/spine2  
+```
+root@spine1# show interfaces irb 
+unit 100 {
+    proxy-macip-advertisement;
+    virtual-gateway-accept-data;
+    family inet {
+        address 150.100.1.1/24 {
+            preferred;
+            virtual-gateway-address 150.100.1.254;
+        }
+    }
+    virtual-gateway-v4-mac 00:00:01:01:00:01;
+}
+unit 101 {
+    proxy-macip-advertisement;
+    virtual-gateway-accept-data;
+    family inet {
+        address 150.101.1.1/24 {
+            preferred;
+            virtual-gateway-address 150.101.1.254;
+        }
+    }
+    virtual-gateway-v4-mac 00:00:02:02:00:02;
+}                                       
+
+{master:0}[edit]
+root@spine1# 
+```
+```
+root@spine2# show interfaces irb 
+unit 100 {
+    proxy-macip-advertisement;
+    virtual-gateway-accept-data;
+    family inet {
+        address 150.100.1.2/24 {
+            preferred;
+            virtual-gateway-address 150.100.1.254;
+        }
+    }
+    virtual-gateway-v4-mac 00:00:01:01:00:01;
+}
+unit 101 {
+    proxy-macip-advertisement;
+    virtual-gateway-accept-data;
+    family inet {
+        address 150.101.1.2/24 {
+            preferred;
+            virtual-gateway-address 150.101.1.254;
+        }
+    }
+    virtual-gateway-v4-mac 00:00:02:02:00:02;
+}                                       
+
+{master:0}[edit]
+root@spine2# 
+```
+Make sure the spine1/spine2 injects the Type-2 evpn routes with MAC+IP on behalf of the leafs 
+This statement is only required when the Centrally Routed Overlay architecture is used for evpn-vxlan.  
+```
+root@spine1# show protocols evpn default-gateway 
+default-gateway no-gateway-community;
+
+{master:0}[edit]
+root@spine1# 
+root@spine2# show protocols evpn default-gateway 
+default-gateway no-gateway-community;
+
+{master:0}[edit]
+root@spine2# 
+```
+
+##### `L1-task17`: make sure the CE1 irb.100 sourced IP can ping the CE2 irb.101 destination IP
+
+```
+root@ce1# run ping 150.101.1.101 source 150.100.1.100 routing-instance TEST    
+PING 150.101.1.101 (150.101.1.101): 56 data bytes
+64 bytes from 150.101.1.101: icmp_seq=0 ttl=64 time=13.110 ms
+64 bytes from 150.101.1.101: icmp_seq=1 ttl=64 time=11.212 ms
+64 bytes from 150.101.1.101: icmp_seq=2 ttl=64 time=11.212 ms
+^C
+--- 150.101.1.101 ping statistics ---
+3 packets transmitted, 3 packets received, 0% packet loss
+round-trip min/avg/max/stddev = 11.212/11.845/13.110/0.895 ms
+
+{master:0}[edit]
+root@ce1# 
+```
+
+##### `L1-task18`: provision at spine1 with an additional regular extended community for the VNI 50100 and make sure the T2 MAC and MAC+IP routes at the leaf3/leaf4 gets the routes with an additional extended community 1:50100
+
+```
+root@spine1# show policy-options policy-statement CUSTOM-100    
+term term1 {
+    from {
+        family evpn;
+        community COM-VNI-50100;
+        nlri-route-type 2;
+    }
+    then {
+        community add ADD-COMMUNITY-100;
+        accept;
+    }
+}
+term term100 {
+    then accept;
+}
+
+{master:0}[edit]
+root@spine1# 
+```
+```
+root@spine1# show policy-options community ADD-COMMUNITY-100 
+members 64512:50100;
+
+{master:0}[edit]
+root@spine1# show protocols bgp group overlay export 
+export CUSTOM-100;
+
+{master:0}[edit]
+root@spine1# 
+```
+```
+root@leaf3# run show route evpn-mac-address 00:01:99:00:00:01 extensive community 64512:50100 active-path    
+
+inet.0: 19 destinations, 24 routes (18 active, 0 holddown, 1 hidden)
+
+:vxlan.inet.0: 18 destinations, 18 routes (17 active, 0 holddown, 1 hidden)
+
+inet6.0: 7 destinations, 7 routes (7 active, 0 holddown, 0 hidden)
+
+bgp.evpn.0: 62 destinations, 124 routes (60 active, 0 holddown, 4 hidden)
+2:1.1.1.1:1::50100::00:01:99:00:00:01/304 MAC/IP (2 entries, 0 announced)
+        *BGP    Preference: 170/-101
+                Route Distinguisher: 1.1.1.1:1
+                Next hop type: Indirect, Next hop index: 0
+                Address: 0xb6260b0
+                Next-hop reference count: 32
+                Source: 1.1.1.11
+                Protocol next hop: 1.1.1.1
+                Indirect next hop: 0x2 no-forward INH Session ID: 0x0
+                State: <Active Int Ext>
+                Local AS: 65505 Peer AS: 64512
+                Age: 45         Metric2: 0 
+                Validation State: unverified 
+                Task: BGP_64512_64512.1.1.1.11+179
+                AS path: I  (Originator)
+                Cluster list:  1.1.1.11
+                Originator ID: 1.1.1.1
+                Communities: 64512:50100 target:1:100 encapsulation:vxlan(0x8)
+                Import Accepted
+                Route Label: 50100
+                ESI: 00:01:01:01:01:01:01:01:01:01
+                Localpref: 100
+                Router ID: 1.1.1.11
+                Secondary Tables: default-switch.evpn.0
+                Indirect next hops: 1
+                        Protocol next hop: 1.1.1.1
+                        Indirect next hop: 0x2 no-forward INH Session ID: 0x0
+                        Indirect path forwarding next hops: 2
+                                Next hop type: Router
+                                Next hop: 10.10.15.1 via et-0/0/48.0
+                                Session Id: 0x0
+                                Next hop: 10.10.16.1 via et-0/0/49.0
+                                Session Id: 0x0
+                        1.1.1.1/32 Originating RIB: inet.0
+                          Node path count: 1
+                          Forwarding nexthops: 2
+                                Nexthop: 10.10.15.1 via et-0/0/48.0
+                                Session Id: 0
+                                Nexthop: 10.10.16.1 via et-0/0/49.0
+                                Session Id: 0
+
+2:1.1.1.1:1::50100::00:01:99:00:00:01::150.100.1.100/304 MAC/IP (2 entries, 0 announced)
+        *BGP    Preference: 170/-101
+                Route Distinguisher: 1.1.1.1:1
+                Next hop type: Indirect, Next hop index: 0
+                Address: 0xb6260b0
+                Next-hop reference count: 32
+                Source: 1.1.1.11
+                Protocol next hop: 1.1.1.1
+                Indirect next hop: 0x2 no-forward INH Session ID: 0x0
+                State: <Active Int Ext>
+                Local AS: 65505 Peer AS: 64512
+                Age: 45         Metric2: 0 
+                Validation State: unverified 
+                Task: BGP_64512_64512.1.1.1.11+179
+                AS path: I 
+                Communities: 64512:50100 target:1:100 encapsulation:vxlan(0x8)
+                Import Accepted
+                Route Label: 50100
+                ESI: 00:01:01:01:01:01:01:01:01:01
+                Localpref: 100
+                Router ID: 1.1.1.11
+                Secondary Tables: default-switch.evpn.0
+                Indirect next hops: 1
+                        Protocol next hop: 1.1.1.1
+                        Indirect next hop: 0x2 no-forward INH Session ID: 0x0
+                        Indirect path forwarding next hops: 2
+                                Next hop type: Router
+                                Next hop: 10.10.15.1 via et-0/0/48.0
+                                Session Id: 0x0
+                                Next hop: 10.10.16.1 via et-0/0/49.0
+                                Session Id: 0x0
+                        1.1.1.1/32 Originating RIB: inet.0
+                          Node path count: 1
+                          Forwarding nexthops: 2
+                                Nexthop: 10.10.15.1 via et-0/0/48.0
+                                Session Id: 0
+                                Nexthop: 10.10.16.1 via et-0/0/49.0
+                                Session Id: 0
+
+```
+
+##### `L1-task19`: at the spine3-re enabled the core ip routing connectivity between the DC-1 and DC-2 using OSPFv2 NSSA area 0.0.0.1 nssa no-summaries default-lsa default-metric 101 inside the existing routing-instance MY-IPVPN-1 virtual-router instance-type. 
+             Same virtual-router instance MY-IPVRF-1 should be enabled in area 0.0.0.1 nssa at spine1-re/spine2-re in order to receive the default route 0.0.0.0/0 
 
 
 
