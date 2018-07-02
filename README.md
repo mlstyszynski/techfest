@@ -144,11 +144,9 @@ root@leaf1> ping 1.1.1.3 source 1.1.1.1
 root@leaf1> ping 1.1.1.4 source 1.1.1.1
 ```
 
-## Part 1: Steps for setting up overlay on Leaf 1, Leaf 2, Leaf 3 and Leaf 4
+##### `L1-task2`: provision and verify the overlay iBGP(spine1/spine2 as overlay route-reflectors)  with EVPN signaling at all DC-1 fabric nodes using the local ASN 64512 as shown on the diagram
 
-#### Leaf-1 config
-
-###### Setup MP-iBGP sessions with spine1/spine2 route-reflectors 
+#### Leaf-1 config 
 
 ```
 root@leaf1# show protocols bgp group overlay 
