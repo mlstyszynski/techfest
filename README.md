@@ -397,7 +397,7 @@ then accept;
 {master:0}[edit]
 root@spine1# 
 ```
-###### `L1-task7`: enable per VNI route-target communities for VNI 50100 target:1:100 and VNI 50101 target:1:101
+##### `L1-task7`: enable per VNI route-target communities for VNI 50100 target:1:100 and VNI 50101 target:1:101
 
 ```
 root@leaf1# show policy-options community COM-VNI-50100  
