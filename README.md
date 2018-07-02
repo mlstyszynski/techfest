@@ -113,7 +113,7 @@ Here's the access information to your POD : [my_pod_access_info](pod1/README.md)
 Confirm connectivity to the leaf lo0 addresses of all leaf devices. 
 These are exchanged via the underlay eBGP session and will be required to setup the overlay iBGP session between leaf devices
 
-#### L1-T1
+##### `L1-task1`: verify the full IPv4 underlay reachability within the  [section 1 topology](topologies/evpn-vxlan-techfest_topo1.png)
 
 ```
 root@leaf1# run show bgp summary group underlay   
