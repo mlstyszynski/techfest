@@ -62,7 +62,7 @@ Here's the access information to your POD : [my_pod_access_info](pod1/README.md)
           Make sure that when the new VNI gets provisioned it's not going to be rejected due to the final reject term. 
 
 `L1-task9`: put in place the switch-options vtep-source-interface, unique route-distinguisher, vrf-import policy-statement configured in previous task as well as the global switch-options EVI vrf-target target:1:8888 (Type1-evpn route dedicated)
-          The global EVI vrf-target target:1:9999 is to be shared across all leaf nodes in the DC-1 and target:1:8888 for the spine1-re/spine2-re - set at the switch-options level
+          The task6 provisioned global EVI vrf-target target:1:9999 is to be shared across all leaf nodes in the DC-1 and target:1:8888 for the spine1-re/spine2-re - set at the switch-options level
 
 `L1-task10`: set the ESI 10 byte values all-active towards the CE1 and CE2
            ESI leaf1/leaf2 towards CE1: `00:01:01:01:01:01:01:01:01:01`
@@ -331,6 +331,76 @@ root@spine1#
 ```
 
 The same evpn configuration is to be used at spine2,leaf1/leaf2, leaf3/leaf4
+
+##### `L1-task6`: provision a global route-target community target:1:9999 (at all leafs) and target:1:8888 at spine1/spine2 at the default-switch EVI
+                  This is for the purpose of the AD EVPN-route type-1 dedicated global target community
+                  
+###### Leaf1 EVPN T1-route route route-target global EVPN Auto-Discovery dedicated route-target community. Same to be enabled at leaf2/leaf3/leaf4            
+```
+root@leaf1# show switch-options vrf-target 
+target:1:9999;
+
+{master:0}[edit]
+root@leaf1# 
+```
+```
+root@leaf1# show policy-options community MY-FAB-COMMUNITY    
+members target:1:9999;
+
+{master:0}[edit]
+root@leaf1# 
+root@leaf1# show policy-options community SPINE-ESI                                               
+members target:1:8888;
+
+{master:0}[edit]
+root@leaf1# 
+root@leaf1# show policy-options policy-statement MY-FABRIC-IMPORT term term1      
+from community MY-FAB-COMMUNITY;
+then accept;
+
+{master:0}[edit]
+root@leaf1# 
+root@leaf1# show policy-options policy-statement MY-FABRIC-IMPORT term term-spine-esi 
+from community SPINE-ESI;
+then accept;
+
+{master:0}[edit]
+root@leaf1# 
+
+```
+###### Spine1 EVPN T1-route route-target global EVPN Auto-Discovery dedicated route-target community. Same to be enabled at spine2
+
+```
+root@spine1# show switch-options vrf-target 
+target:1:8888;
+
+{master:0}[edit]
+root@spine1# 
+root@spine1# show policy-options community SPINE-ESI 
+members target:1:8888;
+
+{master:0}[edit]
+root@spine1# 
+root@spine1# show policy-options community MY-FAB-COMMUNITY                               
+members target:1:9999;
+
+{master:0}[edit]
+root@spine1# 
+root@spine1# show policy-options policy-statement MY-FABRIC-IMPORT term term1             
+from community MY-FAB-COMMUNITY;
+then accept;
+
+{master:0}[edit]
+root@spine1# show policy-options policy-statement MY-FABRIC-IMPORT term term-spine-esi    
+from community SPINE-ESI;
+then accept;
+
+{master:0}[edit]
+root@spine1# 
+```
+
+
+
 
 
 
