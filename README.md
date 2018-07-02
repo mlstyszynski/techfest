@@ -509,7 +509,165 @@ root@spine1#
 As you can see each node will have to be provisioned with a different route-distinguisher. 
 Spine1/Spine2 have different global vrf-target comparing to leafs but both have to be imported by all nodes within the policy-statement MY-FAB-COMMUNITY
 
-   
+
+##### `L1-task10`: set the ESI 10 byte values all-active towards the CE1 and CE2
+            ESI leaf1/leaf2 towards CE1: `00:01:01:01:01:01:01:01:01:01`
+            ESI leaf3/leaf4 towards CE1: `00:01:02:02:02:02:02:02:02:02`
+##### `L1-task11`: set the same active LACP system-id for the given AE interface towards the CE devices - same LACP system-id towards the given CE
+             LACP system-id leaf1/leaf2: `00:00:01:00:00:01`
+             LACP system-id leaf3/leaf4: `00:00:02:00:00:02`
+            
+###### Leaf1 and Leaf2 example of provisioning the aggregated interface towards the CE1. 
+
+```
+root@leaf1# show interfaces ae0 
+esi {
+    00:01:01:01:01:01:01:01:01:01;
+    all-active;
+}
+aggregated-ether-options {
+    lacp {
+        active;
+        system-id 00:00:01:00:00:01;
+    }
+}
+unit 0 {
+    family ethernet-switching {
+        interface-mode trunk;
+        vlan {
+            members 100-101;
+        }
+    }
+}
+
+{master:0}[edit]
+root@leaf1# 
+```   
+```
+root@leaf2# show interfaces ae0 
+esi {
+    00:01:01:01:01:01:01:01:01:01;
+    all-active;
+}
+aggregated-ether-options {
+    lacp {
+        active;
+        system-id 00:00:01:00:00:01;
+    }
+}
+unit 0 {
+    family ethernet-switching {
+        interface-mode trunk;
+        vlan {
+            members 100-101;
+        }
+    }
+}
+
+{master:0}[edit]
+root@leaf2# 
+```
+###### Leaf3 and Leaf4 example of provisioning the aggregated interface towards the CE2
+
+```
+root@leaf3# show interfaces ae0 
+esi {
+    00:01:02:02:02:02:02:02:02:02;
+    all-active;
+}
+aggregated-ether-options {
+    lacp {
+        active;
+        system-id 00:00:02:00:00:02;
+    }
+}
+unit 0 {
+    family ethernet-switching {
+        interface-mode trunk;
+        vlan {
+            members 100-101;
+        }
+    }
+}
+
+{master:0}[edit]
+root@leaf3# 
+
+```
+```
+root@leaf4# show interfaces ae0 
+esi {
+    00:01:02:02:02:02:02:02:02:02;
+    all-active;
+}
+aggregated-ether-options {
+    lacp {
+        active;
+        system-id 00:00:02:00:00:02;
+    }
+}
+unit 0 {
+    family ethernet-switching {
+        interface-mode trunk;
+        vlan {
+            members 100-101;
+        }
+    }
+}
+
+{master:0}[edit]
+root@leaf4# 
+```
+
+##### `L1-task12`: provision the active LACP protocol based aggregated AE interface at the CE1(dual homed to leaf1/leaf2) and CE2(dual homed to leaf3/leaf4)
+
+###### CE1 example of provisioning the dual homed aggregated interface towards the leaf1/leaf2 
+```
+root@ce1# show chassis aggregated-devices 
+ethernet {
+    device-count 1;
+}
+
+{master:0}[edit]
+root@ce1# show interfaces ae0                
+aggregated-ether-options {
+    lacp {
+        active;
+    }
+}
+unit 0 {
+    family ethernet-switching {
+        interface-mode trunk;
+        vlan {
+            members 100-101;
+        }
+    }
+}
+
+{master:0}[edit]
+root@ce1# 
+root@ce1# show interfaces xe-0/0/0 
+ether-options {
+    802.3ad ae0;
+}
+
+{master:0}[edit]
+root@ce1# 
+root@ce1# show interfaces xe-0/0/1 
+ether-options {
+    802.3ad ae0;
+}
+
+{master:0}[edit]
+root@ce1# 
+```
+
+The similar approach should be taken for CE2 connectivity towards the leaf3/leaf4
+
+
+
+
+
 
 
 
