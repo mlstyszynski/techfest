@@ -30,7 +30,8 @@ Spine3-re is to be deployed in underlay eBGP mode and should advertise only the 
 The  environment is composed of the following vqfx nodes: 
 - 3 x vQFX Spines ( Spine1-re/Spine2-re are the EVPN-VXLAN enabled spines in DC-1, Spine3-re in DC-2 is enabled with IP underlay routing only )
 - 4 x vQFX Leafs (L2 leafs in Section-1 and L2L3 leafs in Section-2)
-- 3 x vQFX CEs (CE1-re/CE2-re dual homed to EVPN-VXLAN fabric in DC-1, core3-re is IP underlay connected to the Spine3-re in DC-2)
+- 2 x vQFX CEs (CE1-re/CE2-re dual homed to EVPN-VXLAN fabric in DC-1
+- 1 x vQFX core3-re IP underlay connected to the Spine3-re in DC-2
 
 The underlay eBGP is already pre-provisioned in order to deliver full IP reachability between the loopback0.0 IP@.  
 
