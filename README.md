@@ -1025,8 +1025,7 @@ bgp.evpn.0: 62 destinations, 124 routes (60 active, 0 holddown, 4 hidden)
 
 ```
 
-##### `L1-task19`: at the spine3-re enabled the core ip routing connectivity between the DC-1 and DC-2 using OSPFv2 NSSA area 0.0.0.1 nssa no-summaries default-lsa default-metric 101 inside the existing routing-instance MY-IPVPN-1 virtual-router instance-type. 
-             Same virtual-router instance MY-IPVRF-1 should be enabled in area 0.0.0.1 nssa at spine1-re/spine2-re in order to receive the default route 0.0.0.0/0 
+##### `L1-task19`: at the spine3-re enabled the core ip routing connectivity between the DC-1 and DC-2 using OSPFv2 NSSA area 0.0.0.1 nssa no-summaries default-lsa default-metric 101 inside the existing routing-instance MY-IPVPN-1 virtual-router instance-type. Same virtual-router instance MY-IPVRF-1 should be enabled in area 0.0.0.1 nssa at spine1-re/spine2-re in order to receive the default route 0.0.0.0/0 
 
 
 
