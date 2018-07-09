@@ -1536,6 +1536,17 @@ round-trip min/avg/max/stddev = 762.705/1050.402/1372.196/236.803 ms
 
 {master:0}
 root@ce2> 
+root@ce3> ping 150.100.1.101    
+PING 150.100.1.101 (150.100.1.101): 56 data bytes
+64 bytes from 150.100.1.101: icmp_seq=0 ttl=62 time=1061.817 ms
+64 bytes from 150.100.1.101: icmp_seq=1 ttl=62 time=1039.036 ms
+^C
+--- 150.100.1.101 ping statistics ---
+4 packets transmitted, 2 packets received, 50% packet loss
+round-trip min/avg/max/stddev = 1039.036/1050.427/1061.817/11.390 ms
+
+{master:0}
+root@ce3> 
 
 ```
 
