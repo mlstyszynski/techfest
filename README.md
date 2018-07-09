@@ -1349,6 +1349,193 @@ root@spine2>
 EVPN type5 verification: 
 
 ```
+root@spine3> show evpn ip-prefix-database 
+L3 context: T5-VRF1
+
+IPv4->EVPN Exported Prefixes
+Prefix                                       EVPN route status
+100.100.100.103/32                           Created
+150.250.1.0/24                               Created
+
+EVPN->IPv4 Imported Prefixes
+Prefix                                       Etag
+100.100.100.100/32                           0       
+  Route distinguisher    VNI/Label  Router MAC         Nexthop/Overlay GW/ESI
+  1.1.1.111:1            1100       02:05:86:71:94:00  1.1.1.11
+100.100.100.101/32                           0       
+  Route distinguisher    VNI/Label  Router MAC         Nexthop/Overlay GW/ESI
+  1.1.1.112:1            1100       02:05:86:71:62:00  1.1.1.12
+150.100.1.0/24                               0       
+  Route distinguisher    VNI/Label  Router MAC         Nexthop/Overlay GW/ESI
+  1.1.1.111:1            1100       02:05:86:71:94:00  1.1.1.11
+  1.1.1.112:1            1100       02:05:86:71:62:00  1.1.1.12
+150.101.1.0/24                               0       
+  Route distinguisher    VNI/Label  Router MAC         Nexthop/Overlay GW/ESI
+  1.1.1.111:1            1100       02:05:86:71:94:00  1.1.1.11
+  1.1.1.112:1            1100       02:05:86:71:62:00  1.1.1.12
+
+{master:0}
+root@spine3> show evpn ip-prefix-database extensive 
+L3 context: T5-VRF1
+
+IPv4->EVPN Exported Prefixes
+
+Prefix: 100.100.100.103/32
+  EVPN route status: Created
+  Change flags: 0x0
+  Advertisement mode: Direct nexthop
+  Encapsulation: VXLAN
+  VNI: 1100
+  Router MAC: 02:05:86:71:db:00
+
+Prefix: 150.250.1.0/24
+  EVPN route status: Created
+  Change flags: 0x0
+  Advertisement mode: Direct nexthop
+  Encapsulation: VXLAN
+  VNI: 1100
+  Router MAC: 02:05:86:71:db:00
+
+EVPN->IPv4 Imported Prefixes
+
+Prefix: 100.100.100.100/32, Ethernet tag: 0
+  Change flags: 0x0
+  Remote advertisements:
+    Route Distinguisher: 1.1.1.111:1
+      VNI: 1100
+      Router MAC: 02:05:86:71:94:00
+      BGP nexthop address: 1.1.1.11
+      IP route status: Created
+
+Prefix: 100.100.100.101/32, Ethernet tag: 0
+  Change flags: 0x0
+  Remote advertisements:
+    Route Distinguisher: 1.1.1.112:1
+      VNI: 1100
+      Router MAC: 02:05:86:71:62:00
+      BGP nexthop address: 1.1.1.12
+      IP route status: Created
+<omitted>
+
+root@spine3> show route table T5-VRF1.evpn.0 
+
+T5-VRF1.evpn.0: 8 destinations, 14 routes (8 active, 0 holddown, 0 hidden)
++ = Active Route, - = Last Active, * = Both
+
+5:1.1.1.111:1::0::150.100.1.0::24/304               
+                   *[BGP/170] 01:41:52, localpref 100, from 1.1.1.11
+                      AS path: I, validation-state: unverified
+                    > to 10.10.5.1 via xe-0/0/2.0
+                    [BGP/170] 01:41:52, localpref 100, from 1.1.1.12
+                      AS path: I, validation-state: unverified
+                    > to 10.10.5.1 via xe-0/0/2.0
+5:1.1.1.111:1::0::150.101.1.0::24/304               
+                   *[BGP/170] 01:41:52, localpref 100, from 1.1.1.11
+                      AS path: I, validation-state: unverified
+                    > to 10.10.5.1 via xe-0/0/2.0
+                    [BGP/170] 01:41:52, localpref 100, from 1.1.1.12
+                      AS path: I, validation-state: unverified
+                    > to 10.10.5.1 via xe-0/0/2.0
+5:1.1.1.111:1::0::100.100.100.100::32/304               
+                   *[BGP/170] 01:41:52, localpref 100, from 1.1.1.11
+                      AS path: I, validation-state: unverified
+                    > to 10.10.5.1 via xe-0/0/2.0
+                    [BGP/170] 01:41:52, localpref 100, from 1.1.1.12
+                      AS path: I, validation-state: unverified
+                    > to 10.10.5.1 via xe-0/0/2.0
+5:1.1.1.112:1::0::150.100.1.0::24/304               
+                   *[BGP/170] 01:41:52, localpref 100, from 1.1.1.12
+                      AS path: I, validation-state: unverified
+                    > to 10.10.6.1 via xe-0/0/0.0
+                    [BGP/170] 01:41:52, localpref 100, from 1.1.1.11
+                      AS path: I, validation-state: unverified
+                    > to 10.10.6.1 via xe-0/0/0.0
+5:1.1.1.112:1::0::150.101.1.0::24/304               
+                   *[BGP/170] 01:41:52, localpref 100, from 1.1.1.12
+                      AS path: I, validation-state: unverified
+                    > to 10.10.6.1 via xe-0/0/0.0
+                    [BGP/170] 01:41:52, localpref 100, from 1.1.1.11
+                      AS path: I, validation-state: unverified
+                    > to 10.10.6.1 via xe-0/0/0.0
+5:1.1.1.112:1::0::100.100.100.101::32/304               
+                   *[BGP/170] 01:41:52, localpref 100, from 1.1.1.12
+                      AS path: I, validation-state: unverified
+                    > to 10.10.6.1 via xe-0/0/0.0
+                    [BGP/170] 01:41:52, localpref 100, from 1.1.1.11
+                      AS path: I, validation-state: unverified
+                    > to 10.10.6.1 via xe-0/0/0.0
+5:1.1.1.113:1::0::150.250.1.0::24/304               
+                   *[EVPN/170] 01:39:26
+                      Indirect
+5:1.1.1.113:1::0::100.100.100.103::32/304               
+                   *[EVPN/170] 04:40:25
+                      Indirect
+
+{master:0}
+root@spine3> show route table T5-VRF1.inet.0 
+
+T5-VRF1.inet.0: 8 destinations, 12 routes (8 active, 0 holddown, 0 hidden)
+@ = Routing Use Only, # = Forwarding Use Only
++ = Active Route, - = Last Active, * = Both
+
+1.1.1.113/32       *[Direct/0] 04:40:40
+                    > via lo0.1
+100.100.100.100/32 *[EVPN/170] 01:42:08
+                    > to 10.10.5.1 via xe-0/0/2.0
+100.100.100.101/32 *[EVPN/170] 01:42:08
+                    > to 10.10.6.1 via xe-0/0/0.0
+100.100.100.103/32 *[Static/5] 04:40:42
+                      Discard
+150.100.1.0/24     @[EVPN/170] 01:42:08
+                    > to 10.10.5.1 via xe-0/0/2.0
+                    [EVPN/170] 01:42:08
+                    > to 10.10.6.1 via xe-0/0/0.0
+                   #[Multipath/255] 01:42:08, metric2 0
+                    > to 10.10.5.1 via xe-0/0/2.0
+                      to 10.10.6.1 via xe-0/0/0.0
+150.101.1.0/24     @[EVPN/170] 01:42:08
+                    > to 10.10.5.1 via xe-0/0/2.0
+                    [EVPN/170] 01:42:08
+                    > to 10.10.6.1 via xe-0/0/0.0
+                   #[Multipath/255] 01:42:08, metric2 0
+                    > to 10.10.5.1 via xe-0/0/2.0
+                      to 10.10.6.1 via xe-0/0/0.0
+150.250.1.0/24     *[Direct/0] 02:48:00
+                    > via irb.250
+150.250.1.1/32     *[Local/0] 03:53:26
+                      Local via irb.250
+
+{master:0}
+root@spine3> 
+
+root@ce2# set routing-instances TEST routing-options static route 0.0.0.0/0 next-hop 150.100.1.254 
+
+{master:0}[edit]
+root@ce2# commit 
+configuration check succeeds
+commit complete
+
+{master:0}[edit]
+root@ce2# 
+
+{master:0}
+root@ce2> 
+
+{master:0}
+root@ce2> ping 150.250.1.100 routing-instance TEST 
+PING 150.250.1.100 (150.250.1.100): 56 data bytes
+64 bytes from 150.250.1.100: icmp_seq=0 ttl=62 time=806.318 ms
+64 bytes from 150.250.1.100: icmp_seq=1 ttl=62 time=762.705 ms
+64 bytes from 150.250.1.100: icmp_seq=2 ttl=62 time=1234.241 ms
+64 bytes from 150.250.1.100: icmp_seq=3 ttl=62 time=1372.196 ms
+64 bytes from 150.250.1.100: icmp_seq=4 ttl=62 time=1076.550 ms
+^C
+--- 150.250.1.100 ping statistics ---
+6 packets transmitted, 5 packets received, 16% packet loss
+round-trip min/avg/max/stddev = 762.705/1050.402/1372.196/236.803 ms
+
+{master:0}
+root@ce2> 
 
 ```
 
