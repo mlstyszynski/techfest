@@ -1,4 +1,4 @@
-# EVPN-VXLAN lab Section 1 
+# EVPN-VXLAN virtual-lab
 ## Centrally Routed Bridging Overlay architecture
 
 
@@ -8,7 +8,7 @@
 
 ### Lab objectives
 
-The goal of the section 1 is to build the **Centrally Routed Bridging Overlay** architecture using the Juniper QFX series EVPN-VXLAN technologies to deliver L2 active/active forwarding within the same broadcast-domain(same vlan-id) between the hosts connected to CE1 and CE2. 
+The goal of the present lab is to build the **Centrally Routed Bridging Overlay** architecture using the Juniper QFX series EVPN-VXLAN technologies to deliver L2 active/active forwarding within the DC-1 between the hosts connected to CE1 and CE2 as well as L3 forwarding between the DC-1 and DC-2 using the unified VXLAN transport and evpn-signaling Type-5 for L3 prefix advertisement.  
 
 The end-host emulation is done at the CE1/CE2 and core3-re by the IRB interfaces mapped to the given vlan - irb.100 at the ce1-re and irb.100, irb.101 at ce2-re inside the routing-instance TEST 
 
@@ -16,12 +16,12 @@ The iBGP overlay using EVPN-type2 routes will be used in order to advertise the 
  
 The inter-vni routing will be taking place at the spine1-re and spine2-re therefore the MAC+IP routes will be injected by the spine1-re/Spine2-re on behalf of the layer 2 leafs. 
  
-Spine3-re is deployed in DC-2 in a pure IP routed mode - connected to Spine1-re/Spine2-re underlay using OSPFv2 area 1 NSSA no-summary with OSPFv2 default-route being injected by spine3-re towards spine1-re/spine2-re. 
+Spine3-re is deployed in DC-2 is connected to the same overlay ASN 64512 and  Spine1-re/Spine2-re but DC-1 to DC-2 exchanges only EVPN type-5 route for prefix-advertisement. 
 
 The ultimate goal of the lab section 1 is to deliver:
  - L2 communication between CE1 (VNI-50100) and CE2 (VNI 50100)
  - L3 inter-vni communication CE-1 VNI-50100 to CE-2 VNI-50101 
- - L3 communication between the DC-1 and DC-2 core3-re connected hosts (emulated by irb.250)
+ - L3 communication between the DC-1 and DC-2 using EVPN type-5 routes and VXLAN transport 
 
 Spine3-re is to be deployed in underlay eBGP mode and should advertise only the default-route via eBGP to the border-spines spine1-re/spine2-re. 
 
@@ -30,8 +30,7 @@ Spine3-re is to be deployed in underlay eBGP mode and should advertise only the 
 The  environment is composed of the following vqfx nodes: 
 - 3 x vQFX Spines ( Spine1-re/Spine2-re are the EVPN-VXLAN enabled spines in DC-1, Spine3-re in DC-2 is enabled with IP underlay routing only )
 - 4 x vQFX Leafs (L2 leafs in Section-1 and L2L3 leafs in Section-2)
-- 2 x vQFX CEs (CE1-re/CE2-re dual homed to EVPN-VXLAN fabric in DC-1
-- 1 x vQFX core3-re IP underlay connected to the Spine3-re in DC-2
+- 3 x vQFX CEs (CE1-re/CE2-re dual homed to EVPN-VXLAN fabric in DC-1 and single-homed CE3-re in DC-2) 
 
 The underlay eBGP is already pre-provisioned in order to deliver full IP reachability between the loopback0.0 IP@.  
 
@@ -41,7 +40,7 @@ Use the username: `root` and password: `Juniper1!`
 
 Here's the access information to your POD : [my_pod_access_info](pod1/README.md)
 
-### Lab section 1 tasks
+### Lab tasks
 
 `L1-task1`: verify the full IPv4 underlay reachability within the  [section 1 topology](topologies/evpn-vxlan-techfest_topo1.png)
 
@@ -62,7 +61,7 @@ Here's the access information to your POD : [my_pod_access_info](pod1/README.md)
           Make sure that when the new VNI gets provisioned it's not going to be rejected due to the final reject term. 
 
 `L1-task9`: put in place the switch-options vtep-source-interface, unique route-distinguisher, vrf-import policy-statement configured in previous task as well as the global switch-options EVI vrf-target target:1:8888 (Type1-evpn route dedicated)
-          The task6 provisioned global EVI vrf-target target:1:9999 is to be shared across all leaf nodes in the DC-1 and target:1:8888 for the spine1-re/spine2-re - set at the switch-options level
+          The task6 provisioned global EVI vrf-target target:1:9999 is to be shared across all leaf nodes in the DC-1 and target:1:8888 for the spine1-re/spine2-re - set at the switch-options level. Make sure both of these are imported with the switch-option level vrf-import policy-statement; 
 
 `L1-task10`: set the ESI 10 byte values all-active towards the CE1 and CE2
            ESI leaf1/leaf2 towards CE1: `00:01:01:01:01:01:01:01:01:01`
@@ -89,11 +88,13 @@ Here's the access information to your POD : [my_pod_access_info](pod1/README.md)
 `L1-task19`: at the spine3-re enabled the core ip routing connectivity between the DC-1 and DC-2 using OSPFv2 NSSA area 0.0.0.1 nssa no-summaries default-lsa default-metric 101 inside the existing routing-instance MY-IPVPN-1 virtual-router instance-type. 
              Same virtual-router instance MY-IPVRF-1 should be enabled in area 0.0.0.1 nssa at spine1-re/spine2-re in order to receive the default route 0.0.0.0/0 
 
+The switch-options and protocol evpn configuration are dependent so will need to be configured together in order to have the candidate commit configuration ready. 
 
 | VLAN       | VNI           | Route-target  |
 | ------------- |:-------------:| -----:|
 | vlan100      | 50100      | target:1:100 |
 | vlan101      | 50101      |  target:1:101 |
+| vlan250      | 50250      | target:1:250  |
 
 
 | Node-name     | Underlay ASN  | Overlay ASN | switch-options RD | lo0.0 IP@|
@@ -104,8 +105,15 @@ Here's the access information to your POD : [my_pod_access_info](pod1/README.md)
 | leaf4 | 65504      | 64512 |   1.1.1.4:1 | 1.1.1.4| 
 | spine1 | 65511      | 64512 |    1.1.1.11:1 | 1.1.1.11|
 | spine2 | 65512      | 64512 |    1.1.1.12:1 | 1.1.1.12| 
+| spine3 | 65513      | 64512 | 1.1.1.13:1    | 1.1.1.13| 
 
+spine1/spine2/spine3 level IRB-VGA configurations: 
 
+| VLAN       | VNI           | IRB IP@  | virtual-gateway-address |  virtual-gateway-v4-mac | 
+| ------------- |:-------------:| -----:| -----:| -----:|
+| vlan100      | 50100      | 150.100.1.1, 150.100.1.2 | 150.100.1.254 | 00:00:01:01:00:01|
+| vlan101      | 50101      |  150.101.1.1, 150.101.1.2 | 150.101.1.254 | 00:00:02:02:00:02|
+| vlan250      | 50250      | 150.250.1.1  | 150.250.1.254|   00:00:03:03:03:01|
 
 
 ### Solution guide for EVPN/VXLAN lab section 1 ####
