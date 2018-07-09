@@ -122,7 +122,7 @@ spine1/spine2/spine3 level IRB-VGA configurations:
 Confirm connectivity to the leaf lo0 addresses of all leaf devices. 
 These are exchanged via the underlay eBGP session and will be required to setup the overlay iBGP session between leaf devices
 
-##### `L1-task1`: verify the full IPv4 underlay reachability within the  [section 1 topology](topologies/evpn-vxlan-techfest_topo1.png)
+##### `L1-task1`: verify the full IPv4 underlay reachability within the  [main topology](topologies/evpn-vxlan-techfest_topo1.png)
 
 ```
 root@leaf1# run show bgp summary group underlay   
