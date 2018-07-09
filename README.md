@@ -23,7 +23,6 @@ The ultimate goal of the present lab is to deliver:
  - L3 inter-vni communication CE-1 VNI-50100 to CE-2 VNI-50101 
  - L3 communication between the DC-1 and DC-2 using EVPN type-5 routes and VXLAN transport 
 
-Spine3-re is to be deployed in underlay eBGP mode and should advertise only the default-route via eBGP to the border-spines spine1-re/spine2-re. 
 
 ### Lab environment
 
