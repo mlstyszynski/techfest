@@ -18,7 +18,7 @@ The inter-vni routing will be taking place at the spine1-re and spine2-re theref
  
 Spine3-re is deployed in DC-2 is connected to the same overlay ASN 64512 and  Spine1-re/Spine2-re but DC-1 to DC-2 exchanges only EVPN type-5 route for prefix-advertisement. 
 
-The ultimate goal of the lab section 1 is to deliver:
+The ultimate goal of the present lab is to deliver:
  - L2 communication between CE1 (VNI-50100) and CE2 (VNI 50100)
  - L3 inter-vni communication CE-1 VNI-50100 to CE-2 VNI-50101 
  - L3 communication between the DC-1 and DC-2 using EVPN type-5 routes and VXLAN transport 
@@ -28,9 +28,9 @@ Spine3-re is to be deployed in underlay eBGP mode and should advertise only the 
 ### Lab environment
 
 The  environment is composed of the following vqfx nodes: 
-- 3 x vQFX Spines ( Spine1-re/Spine2-re are the EVPN-VXLAN enabled spines in DC-1, Spine3-re in DC-2 is enabled with IP underlay routing only )
-- 4 x vQFX Leafs (L2 leafs in Section-1 and L2L3 leafs in Section-2)
-- 3 x vQFX CEs (CE1-re/CE2-re dual homed to EVPN-VXLAN fabric in DC-1 and single-homed CE3-re in DC-2) 
+- 3 x vQFX Spines ( Spine1-re/Spine2-re are the EVPN-VXLAN enabled spines in DC-1, Spine3-re in DC-2 )
+- 4 x vQFX Leafs in DC-1 
+- 3 x vQFX CEs (CE1-re/CE2-re dual homed to EVPN-VXLAN fabric in DC-1 and single-homed CE3-re in DC-2 to spine3-re) 
 
 The underlay eBGP is already pre-provisioned in order to deliver full IP reachability between the loopback0.0 IP@.  
 
@@ -116,7 +116,7 @@ spine1/spine2/spine3 level IRB-VGA configurations:
 | vlan250      | 50250      | 150.250.1.1  | 150.250.1.254|   00:00:03:03:03:01|
 
 
-### Solution guide for EVPN/VXLAN lab section 1 ####
+### Solution guide for EVPN/VXLAN lab ####
 
 
 Confirm connectivity to the leaf lo0 addresses of all leaf devices. 
