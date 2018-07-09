@@ -84,7 +84,7 @@ Here's the access information to your POD : [my_pod_access_info](pod1/README.md)
 
 `L1-task18`: provision at spine1 with an additional regular extended community for the VNI 50100 and make sure the T2 MAC and MAC+IP routes at the leaf3/leaf4 gets the routes with an additional extended community 1:50100
 
-`L1-task19`: enable the IPv4 prefix exchange between DC-1 and DC-2 using EVPN Type-5 signaling and vxlan transport using the routing-instance name T5-VRF1 , instance-type vrf. The Type-5 routing-instance should be enabled with interfaces irb.x used in the given data center and enabled with new loopback lo0.1 interface; Each Spine should advertise additionally a static discard route as type-5 route; We'll have to explicitly accept also the new route-target at the switch-options level; 
+`L1-task19`: enable the IPv4 prefix exchange between DC-1 and DC-2 using EVPN Type-5 signaling and vxlan transport within the routing-instance name T5-VRF1, instance-type vrf. The new EVPN type-5 dedicated routing-instance should be enabled with interfaces irb.x used in the given data center and enabled with new loopback lo0.1 interface; Each Spine should advertise additionally a static discard route as type-5 route; We'll have to explicitly accept also the new route-target at the switch-options level; 
 
 
 The switch-options and protocol evpn configuration are dependent so will need to be configured together in order to have the candidate commit configuration ready. 
