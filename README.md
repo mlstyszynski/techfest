@@ -8,11 +8,11 @@
 
 ### Lab objectives
 
-The goal of the present lab is to build the **Centrally Routed Bridging Overlay** architecture using the Juniper QFX series EVPN-VXLAN technologies to deliver L2 active/active forwarding within the DC-1 between the hosts connected to CE1 and CE2 as well as L3 forwarding between the DC-1 and DC-2 using the unified VXLAN transport and evpn-signaling Type-5 for L3 prefix advertisement.  
+The goal of the present lab is to build the **Centrally Routed Bridging Overlay** architecture using the Juniper QFX series EVPN-VXLAN technologies to deliver L2 active/active forwarding within the DC-1 between the hosts connected to CE1 and CE2 as well as L3 forwarding between the DC-1 and DC-2 using the unified VXLAN transport and evpn Type-5 routes for L3 prefix advertisement.  
 
 The end-host emulation is done at the CE1/CE2 and core3-re by the IRB interfaces mapped to the given vlan - irb.100 at the ce1-re and irb.100, irb.101 at ce2-re inside the routing-instance TEST 
 
-The iBGP overlay using EVPN-type2 routes will be used in order to advertise the MAC@ and MAC+IP between the leafs of the same fabric. 
+The iBGP overlay using EVPN-type2 routes will be used in order to advertise the MAC@ and MAC+IP in DC-1 and EVPN-type5 between the DC1 and DC2. 
  
 The inter-vni routing will be taking place at the spine1-re and spine2-re therefore the MAC+IP routes will be injected by the spine1-re/Spine2-re on behalf of the layer 2 leafs. 
  
@@ -81,7 +81,7 @@ Here's the access information to your POD : [my_pod_access_info](pod1/README.md)
 
 `L1-task16`: provision at the spine1/spine2 the IRB-VGA IP gateway interfaces for vlan100 and vlan101 and allocate them into the routing-instance type virtual-router VRF-1
   
-`L1-task17`: make sure the CE1 irb.100 sourced IP can ping the CE2 irb.101 destination IP
+`L1-task17`: make sure the CE1 irb.100 sourced IP can ping the CE2 irb.101 destination IP within the TEST routing-instance
 
 `L1-task18`: provision at spine1 with an additional regular extended community for the VNI 50100 and make sure the T2 MAC and MAC+IP routes at the leaf3/leaf4 gets the routes with an additional extended community 1:50100
 
@@ -1160,5 +1160,190 @@ community T5-COM1 members target:64512:1000;
 
 {master:0}[edit]
 root@spine3# 
+
+root@spine1> show configuration routing-instances 
+T5-VRF1 {
+    instance-type vrf;
+    interface irb.100;
+    interface irb.101;
+    interface lo0.1;
+    route-distinguisher 1.1.1.111:1;
+    vrf-target target:64512:1000;
+    vrf-table-label;
+    routing-options {
+        static {
+            route 100.100.100.100/32 discard;
+        }
+        multipath;
+    }
+    protocols {
+        evpn {
+            ip-prefix-routes {
+                advertise direct-nexthop;
+                encapsulation vxlan;
+                vni 1100;
+                export TYPE5-POLICY;
+            }
+        }
+    }
+}
+
+{master:0}
+root@spine1> 
+root@spine1> show configuration policy-options 
+policy-statement LB {
+    term term1 {
+        from protocol evpn;
+        then {
+            load-balance per-packet;
+        }
+    }
+}
+policy-statement MY-FABRIC-IMPORT {
+    term term1 {
+        from community MY-FAB-COMMUNITY;
+        then accept;
+    }
+    term term-spine-esi {
+        from community SPINE-ESI;
+        then accept;
+    }
+    term term2 {
+        from community COM-VNI-50100;
+        then accept;
+    }
+    term term3 {
+        from community COM-VNI-50101;
+        then accept;
+    }
+    term term5 {
+        from community T5-COM1;
+        then accept;
+    }
+}
+policy-statement MY_VTEPS {
+    term term1 {
+        from {
+            route-filter 1.1.1.0/24 prefix-length-range /32-/32;
+        }
+        then accept;
+    }
+    term term2 {
+        then reject;
+    }
+}
+policy-statement TYPE5-POLICY {
+    term term1 {
+        from {
+            route-filter 150.100.1.0/24 exact;
+            route-filter 150.101.1.0/24 exact;
+            route-filter 100.100.100.100/32 exact;
+        }
+        then accept;
+    }
+    term term1000 {
+        then reject;
+    }
+}
+community COM-VNI-50100 members target:1:100;
+community COM-VNI-50101 members target:1:101;
+community MY-FAB-COMMUNITY members target:1:9999;
+community SPINE-ESI members target:1:8888;
+community T5-COM1 members target:64512:1000;
+
+{master:0}
+root@spine1> 
+
+root@spine2> show configuration routing-instances 
+T5-VRF1 {
+    instance-type vrf;
+    interface irb.100;
+    interface irb.101;
+    interface lo0.1;
+    route-distinguisher 1.1.1.112:1;
+    vrf-target target:64512:1000;
+    routing-options {
+        static {
+            route 100.100.100.101/32 discard;
+        }
+        multipath;
+    }
+    protocols {
+        evpn {
+            ip-prefix-routes {
+                advertise direct-nexthop;
+                encapsulation vxlan;
+                vni 1100;
+                export TYPE5-POLICY;
+            }
+        }
+    }
+}
+
+{master:0}
+root@spine2> show configuration policy-options 
+policy-statement LB {
+    term term1 {
+        from protocol evpn;
+        then {
+            load-balance per-packet;
+        }
+    }
+}
+policy-statement MY-FABRIC-IMPORT {
+    term term1 {
+        from community MY-FAB-COMMUNITY;
+        then accept;
+    }
+    term term-spine-esi {
+        from community SPINE-ESI;
+        then accept;
+    }
+    term term2 {
+        from community COM-VNI-50100;
+        then accept;
+    }
+    term term3 {
+        from community COM-VNI-50101;
+        then accept;
+    }
+    term term5 {
+        from community T5-COM1;
+        then accept;
+    }
+}
+policy-statement MY_VTEPS {
+    term term1 {
+        from {
+            route-filter 1.1.1.0/24 prefix-length-range /32-/32;
+        }
+        then accept;
+    }
+    term term2 {
+        then reject;
+    }
+}
+policy-statement TYPE5-POLICY {
+    term term1 {
+        from {
+            route-filter 150.100.1.0/24 exact;
+            route-filter 150.101.1.0/24 exact;
+            route-filter 100.100.100.101/32 exact;
+        }
+        then accept;
+    }
+    term term1000 {
+        then reject;
+    }
+}
+community COM-VNI-50100 members target:1:100;
+community COM-VNI-50101 members target:1:101;
+community MY-FAB-COMMUNITY members target:1:9999;
+community SPINE-ESI members target:1:8888;
+community T5-COM1 members target:64512:1000;
+
+{master:0}
+root@spine2> 
+
 ```
 
