@@ -85,8 +85,8 @@ Here's the access information to your POD : [my_pod_access_info](pod1/README.md)
 
 `L1-task18`: provision at spine1 with an additional regular extended community for the VNI 50100 and make sure the T2 MAC and MAC+IP routes at the leaf3/leaf4 gets the routes with an additional extended community 1:50100
 
-`L1-task19`: at the spine3-re enabled the core ip routing connectivity between the DC-1 and DC-2 using OSPFv2 NSSA area 0.0.0.1 nssa no-summaries default-lsa default-metric 101 inside the existing routing-instance MY-IPVPN-1 virtual-router instance-type. 
-             Same virtual-router instance MY-IPVRF-1 should be enabled in area 0.0.0.1 nssa at spine1-re/spine2-re in order to receive the default route 0.0.0.0/0 
+`L1-task19`: enable the IPv4 prefix exchange between DC-1 and DC-2 using EVPN Type-5 signaling and vxlan transport using the routing-instance name T5-VRF1 , instance-type vrf. The Type-5 routing-instance should be enabled with interfaces irb.x used in the given data center and enabled with new loopback lo0.1 interface; Each Spine should advertise additionally a static discard route as type-5 route; We'll have to explicitly accept also the new route-target at the switch-options level; 
+
 
 The switch-options and protocol evpn configuration are dependent so will need to be configured together in order to have the candidate commit configuration ready. 
 
@@ -1033,11 +1033,132 @@ bgp.evpn.0: 62 destinations, 124 routes (60 active, 0 holddown, 4 hidden)
 
 ```
 
-##### `L1-task19`: at the spine3-re enabled the core ip routing connectivity between the DC-1 and DC-2 using OSPFv2 NSSA area 0.0.0.1 nssa no-summaries default-lsa default-metric 101 inside the existing routing-instance MY-IPVPN-1 virtual-router instance-type. Same virtual-router instance MY-IPVRF-1 should be enabled in area 0.0.0.1 nssa at spine1-re/spine2-re in order to receive the default route 0.0.0.0/0 
+##### `L1-task19`: enable the IPv4 prefix exchange between DC-1 and DC-2 using EVPN Type-5 signaling and vxlan transport using the routing-instance name T5-VRF1 , instance-type vrf. The Type-5 routing-instance should be enabled with interfaces irb.x used in the given data center and enabled with new loopback lo0.1 interface;Each Spine should advertise additionally a static discard route as type-5 route; 
 
+```
+root@spine3# show routing-instances 
+T5-VRF1 {
+    instance-type vrf;
+    interface irb.250;
+    interface lo0.1;
+    route-distinguisher 1.1.1.113:1;
+    vrf-target target:64512:1000;
+    vrf-table-label;
+    routing-options {
+        static {
+            route 100.100.100.103/32 discard;
+        }
+        multipath;
+    }
+    protocols {
+        evpn {
+            ip-prefix-routes {
+                advertise direct-nexthop;
+                encapsulation vxlan;
+                vni 1100;
+                export TYPE5-POLICY;
+            }
+        }
+    }
+}
 
+{master:0}[edit]
+root@spine3# 
+root@spine3# show policy-options policy-statement TYPE5-POLICY            
+term term1 {
+    from {
+        route-filter 100.100.100.103/32 exact;
+        route-filter 150.250.1.0/24 exact;
+    }
+    then accept;
+}
+term term1000 {
+    then reject;
+}
 
+{master:0}[edit]
+root@spine3# 
+root@spine3# show protocols bgp 
+group dci {
+    type internal;
+    local-address 1.1.1.13;
+    family evpn {
+        signaling;
+    }
+    vpn-apply-export;
+    local-as 64512;
+    neighbor 1.1.1.11;
+    neighbor 1.1.1.12;
+}
+group underlay {
+    type external;
+    export MY_VTEPS;
+    neighbor 10.10.5.1 {
+        peer-as 65511;
+    }
+    neighbor 10.10.6.1 {
+        peer-as 65512;
+    }
+}
 
+{master:0}[edit]
+root@spine3# 
+root@spine3# show policy-options 
+policy-statement LB {
+    term term1 {
+        from protocol evpn;
+        then {
+            load-balance per-packet;
+        }
+    }
+}
+policy-statement MY-FABRIC-IMPORT {
+    term term1 {
+        from community MY-FAB-COMMUNITY;
+        then accept;
+    }
+    term term-spine-esi {
+        from community SPINE-ESI;
+        then accept;
+    }
+    term term2 {
+        from community COM-VNI-50250;
+        then accept;
+    }
+    term term5 {
+        from community T5-COM1;
+        then accept;
+    }
+}
+policy-statement MY_VTEPS {
+    term term1 {
+        from {
+            route-filter 1.1.1.0/24 prefix-length-range /32-/32;
+        }
+        then accept;
+    }
+    term term2 {
+        then reject;
+    }
+}
+policy-statement TYPE5-POLICY {
+    term term1 {
+        from {
+            route-filter 100.100.100.103/32 exact;
+            route-filter 150.250.1.0/24 exact;
+        }
+        then accept;
+    }
+    term term1000 {
+        then reject;
+    }
+}
+community COM-VNI-50250 members target:1:250;
+community MY-FAB-COMMUNITY members target:1:9999;
+community SPINE-ESI members target:1:8888;
+community T5-COM1 members target:64512:1000;
 
-
+{master:0}[edit]
+root@spine3# 
+```
 
