@@ -42,7 +42,7 @@ Here's the access information to your POD : [my_pod_access_info](pod1/README.md)
 
 ### Lab tasks
 
-`L1-task1`: verify the full IPv4 underlay reachability within the  [section 1 topology](topologies/evpn-vxlan-techfest_topo1.png)
+`L1-task1`: verify the full IPv4 underlay reachability within the  [main topology](topologies/evpn-vxlan-techfest_topo1.png)
 
 `L1-task2`: provision and verify the overlay iBGP(spine1/spine2 as overlay route-reflectors)  with EVPN signaling at all DC-1 fabric nodes using the local ASN 64512 as shown on the diagram
 
@@ -1344,6 +1344,12 @@ community T5-COM1 members target:64512:1000;
 
 {master:0}
 root@spine2> 
+
+```
+
+EVPN type5 verification: 
+
+```
 
 ```
 
