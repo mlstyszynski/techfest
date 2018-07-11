@@ -939,20 +939,24 @@ root@leaf4>
 ##### `L1-task15`: verify the EVPN database and EVPN route information for the MAC@ 00:01:99:00:00:01 and 00:01:99:00:00:02 
 
 ```
-root@leaf4# run show evpn database mac-address 00:01:99:00:00:02 extensive 
+root@leaf4> show evpn database mac-address 00:01:99:00:00:01 extensive    
 Instance: default-switch
 
-VN Identifier: 50100, MAC address:: 00:01:99:00:00:01
-  Source: 00:01:02:02:02:02:02:02:02:02, Rank: 1, Status: Active
+VN Identifier: 50100, MAC address: 00:01:99:00:00:01
+  Source: 00:01:01:01:01:01:01:01:01:01, Rank: 1, Status: Active
     Remote origin: 1.1.1.1
-    Timestamp: Jul 02 15:00:26 (0x5b3a3e0a)
+    Remote origin: 1.1.1.2
+    Timestamp: Jul 11 10:38:51 (0x5b45de3b)
     State: <Remote-To-Local-Adv-Done>
     IP address: 150.100.1.100
       Remote origin: 1.1.1.1
+      Remote origin: 1.1.1.2
 
-{master:0}[edit]
-root@leaf4# 
+{master:0}
+root@leaf4> 
 ```
+Make sure the remote-origine IP@ corresponds to the route table information for the given MAC@ 
+
 ##### `L1-task16`: provision at the spine1/spine2 the IRB-VGA IP gateway interfaces for vlan100 and vlan101 and allocate them into the routing-instance type virtual-router VRF-1
 
 ###### EVPN IRB-VGA (Virtual-Gateway-Address) configuration to be used at spine1/spine2  
