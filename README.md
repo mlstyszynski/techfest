@@ -698,102 +698,193 @@ root@ce1#
 ```
 
 ```
-root@leaf4# run show route table default-switch.evpn.0 evpn-mac-address 00:01:99:00:00:01 active-path  
+root@leaf4# run show route table default-switch.evpn.0 evpn-mac-address 00:01:99:00:00:01 active-path 
 
-default-switch.evpn.0: 67 destinations, 131 routes (67 active, 0 holddown, 0 hidden)
+default-switch.evpn.0: 50 destinations, 95 routes (48 active, 0 holddown, 4 hidden)
 + = Active Route, - = Last Active, * = Both
 
-2:1.1.1.7:1::50100::00:01:99:00:00:01/304 MAC/IP        
-                   *[BGP/170] 00:01:03, localpref 100, from 1.1.1.11
+2:1.1.1.1:1::50100::00:01:99:00:00:01/304               
+                   *[BGP/170] 01:46:30, localpref 100, from 1.1.1.11
                       AS path: I, validation-state: unverified
-                      to 10.10.17.1 via et-0/0/2.0
-                    > to 10.10.18.1 via et-0/0/3.0
-2:1.1.1.7:1::50100::00:01:99:00:00:01::150.100.1.100/304 MAC/IP        
-                   *[BGP/170] 00:00:34, localpref 100, from 1.1.1.12
+                      to 10.10.12.1 via xe-0/0/0.0
+                    > to 10.10.10.1 via xe-0/0/1.0
+2:1.1.1.2:1::50100::00:01:99:00:00:01/304               
+                   *[BGP/170] 01:46:29, localpref 100, from 1.1.1.11
                       AS path: I, validation-state: unverified
-                      to 10.10.17.1 via et-0/0/2.0
-                    > to 10.10.18.1 via et-0/0/3.0
+                      to 10.10.12.1 via xe-0/0/0.0
+                    > to 10.10.10.1 via xe-0/0/1.0
+2:1.1.1.1:1::50100::00:01:99:00:00:01::150.100.1.100/304               
+                   *[BGP/170] 01:46:26, localpref 100, from 1.1.1.12
+                      AS path: I, validation-state: unverified
+                      to 10.10.12.1 via xe-0/0/0.0
+                    > to 10.10.10.1 via xe-0/0/1.0
+2:1.1.1.2:1::50100::00:01:99:00:00:01::150.100.1.100/304               
+                   *[BGP/170] 01:46:25, localpref 100, from 1.1.1.12
+                      AS path: I, validation-state: unverified
+                      to 10.10.12.1 via xe-0/0/0.0
+                    > to 10.10.10.1 via xe-0/0/1.0
 
 {master:0}[edit]
 root@leaf4# 
-root@leaf4# run show route table default-switch.evpn.0 evpn-mac-address 00:01:99:00:00:01 active-path extensive 
+root@leaf4# 
+root@leaf4#
 
-default-switch.evpn.0: 67 destinations, 131 routes (67 active, 0 holddown, 0 hidden)
-2:1.1.1.7:1::50100::00:01:99:00:00:01/304 MAC/IP (2 entries, 1 announced)
+
+{master:0}[edit]
+root@leaf4# run show route table default-switch.evpn.0 evpn-mac-address 00:01:99:00:00:01 active-path extensive    
+
+default-switch.evpn.0: 50 destinations, 95 routes (48 active, 0 holddown, 4 hidden)
+2:1.1.1.1:1::50100::00:01:99:00:00:01/304 (2 entries, 1 announced)
         *BGP    Preference: 170/-101
-                Route Distinguisher: 1.1.1.7:1
+                Route Distinguisher: 1.1.1.1:1
                 Next hop type: Indirect, Next hop index: 0
-                Address: 0xb622bd0
-                Next-hop reference count: 40
+                Address: 0x9db6c70
+                Next-hop reference count: 20
                 Source: 1.1.1.11
-                Protocol next hop: 1.1.1.7
+                Protocol next hop: 1.1.1.1
                 Indirect next hop: 0x2 no-forward INH Session ID: 0x0
                 State: <Secondary Active Int Ext>
-                Local AS: 65506 Peer AS: 64512
-                Age: 1:27       Metric2: 0 
+                Local AS: 65504 Peer AS: 64512
+                Age: 1:47:33    Metric2: 0 
                 Validation State: unverified 
                 Task: BGP_64512_64512.1.1.1.11
                 Announcement bits (1): 0-default-switch-evpn 
                 AS path: I (Originator)
                 Cluster list:  1.1.1.11
-                Originator ID: 1.1.1.7
-                Communities: target:1:100 encapsulation:vxlan(0x8)
+                Originator ID: 1.1.1.1
+                Communities: 64512:50100 target:1:100 encapsulation0:0:0:0:vxlan
                 Import Accepted
                 Route Label: 50100
-                ESI: 00:01:02:02:02:02:02:02:02:02
+                ESI: 00:01:01:01:01:01:01:01:01:01
                 Localpref: 100
                 Router ID: 1.1.1.11
                 Primary Routing Table bgp.evpn.0
                 Indirect next hops: 1
-                        Protocol next hop: 1.1.1.7
+                        Protocol next hop: 1.1.1.1
                         Indirect next hop: 0x2 no-forward INH Session ID: 0x0
                         Indirect path forwarding next hops: 2
                                 Next hop type: Router
-                                Next hop: 10.10.17.1 via et-0/0/2.0
+                                Next hop: 10.10.12.1 via xe-0/0/0.0
                                 Session Id: 0x0
-                                Next hop: 10.10.18.1 via et-0/0/3.0
+                                Next hop: 10.10.10.1 via xe-0/0/1.0
                                 Session Id: 0x0
-                        1.1.1.7/32 Originating RIB: inet.0
+                        1.1.1.1/32 Originating RIB: inet.0
                           Node path count: 1
                           Forwarding nexthops: 2
-                                Nexthop: 10.10.17.1 via et-0/0/2.0
+                                Nexthop: 10.10.12.1 via xe-0/0/0.0
 
-2:1.1.1.7:1::50100::00:01:99:00:00:01::150.100.1.100/304 MAC/IP (2 entries, 1 announced)
+2:1.1.1.2:1::50100::00:01:99:00:00:01/304 (2 entries, 1 announced)
         *BGP    Preference: 170/-101
-                Route Distinguisher: 1.1.1.7:1
+                Route Distinguisher: 1.1.1.2:1
                 Next hop type: Indirect, Next hop index: 0
-                Address: 0xb622bd0
-                Next-hop reference count: 40
-                Source: 1.1.1.12
-                Protocol next hop: 1.1.1.7
+                Address: 0x9db7630      
+                Next-hop reference count: 20
+                Source: 1.1.1.11
+                Protocol next hop: 1.1.1.2
                 Indirect next hop: 0x2 no-forward INH Session ID: 0x0
                 State: <Secondary Active Int Ext>
-                Local AS: 65506 Peer AS: 64512
-                Age: 58         Metric2: 0 
+                Local AS: 65504 Peer AS: 64512
+                Age: 1:47:32    Metric2: 0 
+                Validation State: unverified 
+                Task: BGP_64512_64512.1.1.1.11
+                Announcement bits (1): 0-default-switch-evpn 
+                AS path: I (Originator)
+                Cluster list:  1.1.1.11
+                Originator ID: 1.1.1.2
+                Communities: 64512:50100 target:1:100 encapsulation0:0:0:0:vxlan
+                Import Accepted
+                Route Label: 50100
+                ESI: 00:01:01:01:01:01:01:01:01:01
+                Localpref: 100
+                Router ID: 1.1.1.11
+                Primary Routing Table bgp.evpn.0
+                Indirect next hops: 1
+                        Protocol next hop: 1.1.1.2
+                        Indirect next hop: 0x2 no-forward INH Session ID: 0x0
+                        Indirect path forwarding next hops: 2
+                                Next hop type: Router
+                                Next hop: 10.10.12.1 via xe-0/0/0.0
+                                Session Id: 0x0
+                                Next hop: 10.10.10.1 via xe-0/0/1.0
+                                Session Id: 0x0
+                        1.1.1.2/32 Originating RIB: inet.0
+                          Node path count: 1
+                          Forwarding nexthops: 2
+                                Nexthop: 10.10.12.1 via xe-0/0/0.0
+
+2:1.1.1.1:1::50100::00:01:99:00:00:01::150.100.1.100/304 (2 entries, 1 announced)
+        *BGP    Preference: 170/-101
+                Route Distinguisher: 1.1.1.1:1
+                Next hop type: Indirect, Next hop index: 0
+                Address: 0x9db6c70
+                Next-hop reference count: 20
+                Source: 1.1.1.12
+                Protocol next hop: 1.1.1.1
+                Indirect next hop: 0x2 no-forward INH Session ID: 0x0
+                State: <Secondary Active Int Ext>
+                Local AS: 65504 Peer AS: 64512
+                Age: 1:47:29    Metric2: 0 
                 Validation State: unverified 
                 Task: BGP_64512_64512.1.1.1.12
                 Announcement bits (1): 0-default-switch-evpn 
                 AS path: I
-                Communities: target:1:100 encapsulation:vxlan(0x8)
+                Communities: target:1:100 encapsulation0:0:0:0:vxlan
                 Import Accepted
                 Route Label: 50100
-                ESI: 00:01:02:02:02:02:02:02:02:02
+                ESI: 00:01:01:01:01:01:01:01:01:01
                 Localpref: 100
                 Router ID: 1.1.1.12
                 Primary Routing Table bgp.evpn.0
                 Indirect next hops: 1
-                        Protocol next hop: 1.1.1.7
+                        Protocol next hop: 1.1.1.1
                         Indirect next hop: 0x2 no-forward INH Session ID: 0x0
                         Indirect path forwarding next hops: 2
                                 Next hop type: Router
-                                Next hop: 10.10.17.1 via et-0/0/2.0
+                                Next hop: 10.10.12.1 via xe-0/0/0.0
                                 Session Id: 0x0
-                                Next hop: 10.10.18.1 via et-0/0/3.0
+                                Next hop: 10.10.10.1 via xe-0/0/1.0
                                 Session Id: 0x0
-                        1.1.1.7/32 Originating RIB: inet.0
+                        1.1.1.1/32 Originating RIB: inet.0
                           Node path count: 1
                           Forwarding nexthops: 2
-                                Nexthop: 10.10.17.1 via et-0/0/2.0
+                                Nexthop: 10.10.12.1 via xe-0/0/0.0
+
+2:1.1.1.2:1::50100::00:01:99:00:00:01::150.100.1.100/304 (2 entries, 1 announced)
+        *BGP    Preference: 170/-101
+                Route Distinguisher: 1.1.1.2:1
+                Next hop type: Indirect, Next hop index: 0
+                Address: 0x9db7630
+                Next-hop reference count: 20
+                Source: 1.1.1.12
+                Protocol next hop: 1.1.1.2
+                Indirect next hop: 0x2 no-forward INH Session ID: 0x0
+                State: <Secondary Active Int Ext>
+                Local AS: 65504 Peer AS: 64512
+                Age: 1:47:28    Metric2: 0 
+                Validation State: unverified 
+                Task: BGP_64512_64512.1.1.1.12
+                Announcement bits (1): 0-default-switch-evpn 
+                AS path: I
+                Communities: target:1:100 encapsulation0:0:0:0:vxlan
+                Import Accepted
+                Route Label: 50100      
+                ESI: 00:01:01:01:01:01:01:01:01:01
+                Localpref: 100
+                Router ID: 1.1.1.12
+                Primary Routing Table bgp.evpn.0
+                Indirect next hops: 1
+                        Protocol next hop: 1.1.1.2
+                        Indirect next hop: 0x2 no-forward INH Session ID: 0x0
+                        Indirect path forwarding next hops: 2
+                                Next hop type: Router
+                                Next hop: 10.10.12.1 via xe-0/0/0.0
+                                Session Id: 0x0
+                                Next hop: 10.10.10.1 via xe-0/0/1.0
+                                Session Id: 0x0
+                        1.1.1.2/32 Originating RIB: inet.0
+                          Node path count: 1
+                          Forwarding nexthops: 2
+                                Nexthop: 10.10.12.1 via xe-0/0/0.0
 
 {master:0}[edit]
 root@leaf4# 
