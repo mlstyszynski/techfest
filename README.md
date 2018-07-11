@@ -798,6 +798,104 @@ default-switch.evpn.0: 67 destinations, 131 routes (67 active, 0 holddown, 0 hid
 {master:0}[edit]
 root@leaf4# 
 
+root@leaf4> show ethernet-switching table 
+
+MAC flags (S - static MAC, D - dynamic MAC, L - locally learned, P - Persistent static
+           SE - statistics enabled, NM - non configured MAC, R - remote PE MAC, O - ovsdb MAC)
+
+
+Ethernet switching table : 9 entries, 9 learned
+Routing instance : default-switch
+   Vlan                MAC                 MAC      Logical                Active                        
+   name                address             flags    interface              source                       
+   vlan100             00:00:01:01:00:01   DR       esi.1739               05:00:00:ff:e8:00:00:c3:b4:00  
+   vlan100             00:01:99:00:00:01   DR       esi.1749               00:01:01:01:01:01:01:01:01:01  
+   vlan100             00:01:99:00:00:02   DLR      ae0.0                
+   vlan100             02:05:86:71:47:00   D        vtep.32769             1.1.1.11                       
+   vlan100             02:05:86:71:cb:00   D        vtep.32770             1.1.1.12                       
+   vlan101             00:00:02:02:00:02   DR       esi.1738               05:00:00:ff:e8:00:00:c3:b5:00  
+   vlan101             00:01:88:00:00:02   DLR      ae0.0                
+   vlan101             02:05:86:71:47:00   D        vtep.32769             1.1.1.11                       
+   vlan101             02:05:86:71:cb:00   D        vtep.32770             1.1.1.12                       
+
+{master:0}
+root@leaf4> 
+
+root@leaf4> show ethernet-switching vxlan-tunnel-end-point remote mac-table 
+
+MAC flags (S -static MAC, D -dynamic MAC, L -locally learned, C -Control MAC
+           SE -Statistics enabled, NM -Non configured MAC, R -Remote PE MAC)
+
+Logical system   : <default>
+Routing instance : default-switch
+ Bridging domain : vlan100+100, VLAN : 100, VNID : 50100
+   MAC                 MAC      Logical          Remote VTEP
+   address             flags    interface        IP address
+   00:00:01:01:00:01   DR       esi.1739         1.1.1.12     
+   00:01:99:00:00:01   DR       esi.1749         1.1.1.2 1.1.1.1 
+   02:05:86:71:47:00   D        vtep.32769       1.1.1.11     
+   02:05:86:71:cb:00   D        vtep.32770       1.1.1.12     
+
+MAC flags (S -static MAC, D -dynamic MAC, L -locally learned, C -Control MAC
+           SE -Statistics enabled, NM -Non configured MAC, R -Remote PE MAC)
+
+ Bridging domain : vlan101+101, VLAN : 101, VNID : 50101
+   MAC                 MAC      Logical          Remote VTEP
+   address             flags    interface        IP address
+   00:00:02:02:00:02   DR       esi.1738         1.1.1.12     
+   02:05:86:71:47:00   D        vtep.32769       1.1.1.11     
+   02:05:86:71:cb:00   D        vtep.32770       1.1.1.12     
+
+{master:0}
+root@leaf4> 
+
+root@leaf4> show ethernet-switching vxlan-tunnel-end-point esi    
+ESI                           RTT                      VLNBH INH     ESI-IFL   LOC-IFL   #RVTEPs
+00:01:01:01:01:01:01:01:01:01 default-switch           1749  131079  esi.1749            2    
+    RVTEP-IP             RVTEP-IFL      VENH     MASK-ID   FLAGS
+    1.1.1.2              vtep.32773     1750     1         2         
+    1.1.1.1              vtep.32771     1740     0         2         
+ESI                           RTT                      VLNBH INH     ESI-IFL   LOC-IFL   #RVTEPs
+00:01:02:02:02:02:02:02:02:02 default-switch           1752  131083  esi.1752  ae0.0     1    
+    RVTEP-IP             RVTEP-IFL      VENH     MASK-ID   FLAGS
+    1.1.1.3              vtep.32774     1751     0         2         
+ESI                           RTT                      VLNBH INH     ESI-IFL   LOC-IFL   #RVTEPs
+05:00:00:ff:e7:00:00:c3:b4:00 default-switch           1736  131071  esi.1736            1    
+    RVTEP-IP             RVTEP-IFL      VENH     MASK-ID   FLAGS
+    1.1.1.11             vtep.32769     1734     0         2         
+ESI                           RTT                      VLNBH INH     ESI-IFL   LOC-IFL   #RVTEPs
+05:00:00:ff:e7:00:00:c3:b5:00 default-switch           1735  131070  esi.1735            1    
+    RVTEP-IP             RVTEP-IFL      VENH     MASK-ID   FLAGS
+    1.1.1.11             vtep.32769     1734     0         2         
+ESI                           RTT                      VLNBH INH     ESI-IFL   LOC-IFL   #RVTEPs
+05:00:00:ff:e8:00:00:c3:b4:00 default-switch           1739  131073  esi.1739            1    
+    RVTEP-IP             RVTEP-IFL      VENH     MASK-ID   FLAGS
+    1.1.1.12             vtep.32770     1737     0         2         
+ESI                           RTT                      VLNBH INH     ESI-IFL   LOC-IFL   #RVTEPs
+05:00:00:ff:e8:00:00:c3:b5:00 default-switch           1738  131072  esi.1738            1    
+    RVTEP-IP             RVTEP-IFL      VENH     MASK-ID   FLAGS
+    1.1.1.12             vtep.32770     1737     0         2         
+ESI                           RTT                      VLNBH INH     ESI-IFL   LOC-IFL   #RVTEPs
+05:00:00:ff:e9:00:00:c4:4a:00 default-switch           1748  131078  esi.1748            1    
+    RVTEP-IP             RVTEP-IFL      VENH     MASK-ID   FLAGS
+    1.1.1.13             vtep.32772     1747     0         2         
+
+{master:0}
+root@leaf4> 
+root@leaf4> show ethernet-switching vxlan-tunnel-end-point remote summary 
+Logical System Name       Id  SVTEP-IP         IFL   L3-Idx
+<default>                 0   1.1.1.4          lo0.0    0  
+ RVTEP-IP         IFL-Idx   NH-Id
+ 1.1.1.1          570       1740     
+ 1.1.1.2          572       1750     
+ 1.1.1.3          573       1751     
+ 1.1.1.11         568       1734     
+ 1.1.1.12         569       1737     
+ 1.1.1.13         571       1747     
+
+{master:0}
+root@leaf4> 
+
 ```
 
 ##### `L1-task15`: verify the EVPN database and EVPN route information for the MAC@ 00:01:99:00:00:01 and 00:01:99:00:00:02 
