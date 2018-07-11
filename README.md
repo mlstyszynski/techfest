@@ -97,7 +97,7 @@ The switch-options and protocol evpn configuration are dependent so will need to
 
 
 
-| Node-name     | Underlay ASN  | Overlay ASN | switch-options RD | lo0.0 IP@| Global EVI RT |
+| Node-name     | Underlay ASN  | Overlay ASN | switch-options RD | lo0.0 IP@| switch-options vrf-target |
 | ------------- |:-------------:| -----:|-----:| -------------:| -------------:|
 | leaf1      | 65501 | 64512 | 1.1.1.1:1 | 1.1.1.1|target:1:9999|
 | leaf2      | 65502 | 64512   |   1.1.1.2:1 | 1.1.1.2|target:1:9999|
