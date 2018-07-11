@@ -54,13 +54,14 @@ Here's the access information to your POD : [my_pod_access_info](pod1/README.md)
 
 `L1-task6`: provision switch-options global route-target community for the default-switch EVI - EVPN-route type-1 dedicated global target community. Make sure it's also part of the accepted term in the import policy statement MY-FAB-IMP-POLICY. 
 
-`L1-task7`: enable per VNI route-target communities for VNI 50100 target:1:100 and VNI 50101 target:1:101
+`L1-task7`: set the switch-options vtep-source-interface, unique route-distinguisher, vrf-import policy-statement configured in previous task as well as the global switch-options EVI vrf-target target:1:8888 (Type1-evpn route dedicated)
+          The task6 provisioned global EVI vrf-target target:1:9999 is to be shared across all leaf nodes in the DC-1 and target:1:8888 for the spine1-re/spine2-re - set at the switch-options level. Make sure both of these are imported with the switch-option level vrf-import policy-statement; 
 
-`L1-task8`: provision an import policy-options policy-statement MY-FAB-IMP-POLICY to accept the global EVI route-target community and accept the customized per VNI target communities.
+`L1-task8`: enable per VNI route-target communities for VNI 50100 target:1:100 and VNI 50101 target:1:101
+
+`L1-task9`: provision an import policy-options policy-statement MY-FAB-IMP-POLICY to accept the global EVI route-target community and accept the customized per VNI target communities.
           Make sure that when the new VNI gets provisioned it's not going to be rejected due to the final reject term. 
 
-`L1-task9`: put in place the switch-options vtep-source-interface, unique route-distinguisher, vrf-import policy-statement configured in previous task as well as the global switch-options EVI vrf-target target:1:8888 (Type1-evpn route dedicated)
-          The task6 provisioned global EVI vrf-target target:1:9999 is to be shared across all leaf nodes in the DC-1 and target:1:8888 for the spine1-re/spine2-re - set at the switch-options level. Make sure both of these are imported with the switch-option level vrf-import policy-statement; 
 
 `L1-task10`: set the ESI 10 byte values all-active towards the CE1 and CE2
            ESI leaf1/leaf2 towards CE1: `00:01:01:01:01:01:01:01:01:01`
@@ -405,7 +406,34 @@ then accept;
 {master:0}[edit]
 root@spine1# 
 ```
-##### `L1-task7`: enable per VNI route-target communities for VNI 50100 target:1:100 and VNI 50101 target:1:101
+##### `L1-task7`: set the switch-options vtep-source-interface, unique route-distinguisher, vrf-import policy-statement configured in previous task as well as the global switch-options EVI vrf-target target:1:8888 (Type1-evpn route dedicated). The global EVI vrf-target target:1:9999 is to be shared across all leaf nodes in the DC-1 and target:1:8888 for the spine1-re/spine2-re - set at the switch-options level
+ 
+ ###### Leaf1 - switch-option configuration example with vtep-source-interface, unique route-distinguisher 
+ 
+```
+root@leaf1# show switch-options 
+vtep-source-interface lo0.0;
+route-distinguisher 1.1.1.1:1;
+vrf-import MY-FABRIC-IMPORT;
+vrf-target target:1:9999;
+
+{master:0}[edit]
+root@leaf1# 
+```
+ ###### Spine1 - switch-option configuration example with vtep-source-interface, unique route-distinguisher 
+```
+root@spine1# show switch-options 
+vtep-source-interface lo0.0;
+route-distinguisher 1.1.1.11:1;
+vrf-import MY-FABRIC-IMPORT;
+vrf-target target:1:8888;
+
+{master:0}[edit]
+root@spine1# 
+```
+As you can see each node will have to be provisioned with a different route-distinguisher. 
+Spine1/Spine2 have different global vrf-target comparing to leafs but both have to be imported by all nodes within the policy-statement MY-FAB-COMMUNITY
+##### `L1-task8`: enable per VNI route-target communities for VNI 50100 target:1:100 and VNI 50101 target:1:101
 
 ```
 root@leaf1# show policy-options community COM-VNI-50100  
@@ -419,7 +447,7 @@ members target:1:101;
 root@leaf1# 
 ```
 
-##### `L1-task8`: provision an import policy-options policy-statement MY-FAB-IMP-POLICY to accept the global EVI route-target community and accept the customized per VNI target communities. Make sure that when the new VNI gets provisioned it's not going to be rejected due to the final reject term.
+##### `L1-task9`: provision an import policy-options policy-statement MY-FAB-IMP-POLICY to accept the global EVI route-target community and accept the customized per VNI target communities. Make sure that when the new VNI gets provisioned it's not going to be rejected due to the final reject term.
 
 ###### Leaf1 import policy-statement example - to be attached at the switch-options vrf-import 
 ```
@@ -488,34 +516,6 @@ vrf-import MY-FABRIC-IMPORT;
 root@spine1# 
 ```
 The same policy-statement is to be enabled at the spine2
-
-##### `L1-task9`: put in place the switch-options vtep-source-interface, unique route-distinguisher, vrf-import policy-statement configured in previous task as well as the global switch-options EVI vrf-target target:1:8888 (Type1-evpn route dedicated). The global EVI vrf-target target:1:9999 is to be shared across all leaf nodes in the DC-1 and target:1:8888 for the spine1-re/spine2-re - set at the switch-options level
- 
- ###### Leaf1 - switch-option configuration example with vtep-source-interface, unique route-distinguisher 
- 
-```
-root@leaf1# show switch-options 
-vtep-source-interface lo0.0;
-route-distinguisher 1.1.1.1:1;
-vrf-import MY-FABRIC-IMPORT;
-vrf-target target:1:9999;
-
-{master:0}[edit]
-root@leaf1# 
-```
- ###### Spine1 - switch-option configuration example with vtep-source-interface, unique route-distinguisher 
-```
-root@spine1# show switch-options 
-vtep-source-interface lo0.0;
-route-distinguisher 1.1.1.11:1;
-vrf-import MY-FABRIC-IMPORT;
-vrf-target target:1:8888;
-
-{master:0}[edit]
-root@spine1# 
-```
-As you can see each node will have to be provisioned with a different route-distinguisher. 
-Spine1/Spine2 have different global vrf-target comparing to leafs but both have to be imported by all nodes within the policy-statement MY-FAB-COMMUNITY
 
 
 ##### `L1-task10`: set the ESI 10 byte values all-active towards the CE1 and CE2
