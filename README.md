@@ -117,6 +117,15 @@ spine1/spine2/spine3 level IRB-VGA configurations:
 | vlan250      | 50250      | 150.250.1.1  | 150.250.1.254|   00:00:03:03:03:01|
 
 
+Make sure the EVPN type-5 routes dedicated routing-instance has an additional lo0.1 enbaled: 
+
+
+| node-name       | RD           | T5 Route-Target  | T5 instance loopback0.1 |
+| ------------- |:-------------:| -----:| -----:|
+| spine1      | 1.1.1.111:1      |  target:64512:1000 | 1.1.1.111/32|
+| spine2      | 1.1.1.112:1      |   target:64512:1000 |1.1.1.112/32|
+| spine3      | 1.1.1.113:1      |  target:64512:1000  |1.1.1.113/32|
+
 ### Solution guide for EVPN/VXLAN lab ####
 
 
@@ -1265,6 +1274,16 @@ bgp.evpn.0: 62 destinations, 124 routes (60 active, 0 holddown, 4 hidden)
 ```
 
 ##### `L1-task19`: enable the IPv4 prefix exchange between DC-1 and DC-2 using EVPN Type-5 signaling and vxlan transport using the routing-instance name T5-VRF1 , instance-type vrf. The Type-5 routing-instance should be enabled with interfaces irb.x used in the given data center and enabled with new loopback lo0.1 interface;Each Spine should advertise additionally a static discard route as type-5 route; 
+
+
+Make sure the EVPN type-5 routes dedicated routing-instance has an additional lo0.1 enbaled: 
+
+
+| node-name       | RD           | T5 Route-Target  | T5 instance loopback0.1 |
+| ------------- |:-------------:| -----:| -----:|
+| spine1      | 1.1.1.111:1      |  target:64512:1000 | 1.1.1.111/32|
+| spine2      | 1.1.1.112:1      |   target:64512:1000 |1.1.1.112/32|
+| spine3      | 1.1.1.113:1      |  target:64512:1000  |1.1.1.113/32|
 
 ```
 root@spine3# show routing-instances 
