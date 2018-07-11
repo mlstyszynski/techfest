@@ -848,6 +848,45 @@ MAC flags (S -static MAC, D -dynamic MAC, L -locally learned, C -Control MAC
 
 {master:0}
 root@leaf4> 
+root@leaf4> show route forwarding-table destination 00:01:99:00:00:01 extensive 
+Routing table: default-switch.evpn-vxlan [Index 3] 
+Bridging domain: vlan100.evpn-vxlan [Index 3] 
+VPLS:
+    
+Destination:  00:01:99:00:00:01/48
+  Learn VLAN: 0                        Route type: user                  
+  Route reference: 0                   Route interface-index: 544 
+  Multicast RPF nh index: 0         
+  IFL generation: 0                    Epoch: 0   
+  Sequence Number: 0                   Learn Mask: 0x4000000000000000030000000000000000000000
+  L2 Flags: control_dyn, esi
+  Flags: sent to PFE
+  Next-hop type: indirect              Index: 131079   Reference: 2    
+  Nexthop:  
+  Next-hop type: composite             Index: 1749     Reference: 2    
+  Nexthop:  
+  Next-hop type: composite             Index: 1750     Reference: 6    
+  Next-hop type: indirect              Index: 131081   Reference: 3    
+  Next-hop type: unilist               Index: 131076   Reference: 5    
+  Nexthop: 10.10.12.1
+  Next-hop type: unicast               Index: 1732     Reference: 9    
+  Next-hop interface: xe-0/0/0.0       Weight: 0x0  
+  Nexthop: 10.10.10.1
+  Next-hop type: unicast               Index: 1733     Reference: 9    
+  Next-hop interface: xe-0/0/1.0       Weight: 0x0  
+  Nexthop:  
+  Next-hop type: composite             Index: 1740     Reference: 6    
+  Next-hop type: indirect              Index: 131077   Reference: 3    
+  Next-hop type: unilist               Index: 131076   Reference: 5    
+  Nexthop: 10.10.12.1
+  Next-hop type: unicast               Index: 1732     Reference: 9    
+  Next-hop interface: xe-0/0/0.0       Weight: 0x0  
+  Nexthop: 10.10.10.1
+  Next-hop type: unicast               Index: 1733     Reference: 9    
+  Next-hop interface: xe-0/0/1.0       Weight: 0x0  
+
+{master:0}
+root@leaf4> 
 
 root@leaf4> show ethernet-switching vxlan-tunnel-end-point esi    
 ESI                           RTT                      VLNBH INH     ESI-IFL   LOC-IFL   #RVTEPs
@@ -880,7 +919,6 @@ ESI                           RTT                      VLNBH INH     ESI-IFL   L
     RVTEP-IP             RVTEP-IFL      VENH     MASK-ID   FLAGS
     1.1.1.13             vtep.32772     1747     0         2         
 
-{master:0}
 root@leaf4> 
 root@leaf4> show ethernet-switching vxlan-tunnel-end-point remote summary 
 Logical System Name       Id  SVTEP-IP         IFL   L3-Idx
