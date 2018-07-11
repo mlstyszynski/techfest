@@ -47,12 +47,12 @@ Here's the access information to your POD : [my_pod_access_info](pod1/README.md)
 
 `L1-taks3`: enable and verify the underlay and overlay IP-ECMP within routing-options forwarding-options and protocol bgp level
 
-`L1-task4`: provision the VNI values at the VLAN level - create vlan100 with vxlan vni 50100 
+`L1-task4`: provision the VNI values at the VLAN level - create vlan100 with vxlan vni 50100 within the DC-1 fabric
 
 `L1-task5`: set the protocol evpn encapsulation type to vxlan, extended-vni list to the vni numbers 50100 and 50101 and the multicast-mode. 
             Make sure each given vni under evpn vni-options has vrf-target `target:x:y` defined and corresponding to the one you'll be later importing in the MY-FAB-IMP-POLICY policy-statement
 
-`L1-task6`: provision a global route-target community for the default-switch EVI - EVPN-route type-1 dedicated global target community. Make sure it's also part of the import policy statement MY-FAB-IMP-POLICY. 
+`L1-task6`: provision switch-options global route-target community for the default-switch EVI - EVPN-route type-1 dedicated global target community. Make sure it's also part of the accepted term in the import policy statement MY-FAB-IMP-POLICY. 
 
 `L1-task7`: enable per VNI route-target communities for VNI 50100 target:1:100 and VNI 50101 target:1:101
 
@@ -96,15 +96,16 @@ The switch-options and protocol evpn configuration are dependent so will need to
 | vlan250      | 50250      | target:1:250  |
 
 
-| Node-name     | Underlay ASN  | Overlay ASN | switch-options RD | lo0.0 IP@|
-| ------------- |:-------------:| -----:|-----:|:-------------:|
-| leaf1      | 65501 | 64512 | 1.1.1.1:1 | 1.1.1.1|
-| leaf2      | 65502 | 64512   |   1.1.1.2:1 | 1.1.1.2|
-| leaf3 | 65503      | 64512 |  1.1.1.3:1 | 1.1.1.3|
-| leaf4 | 65504      | 64512 |   1.1.1.4:1 | 1.1.1.4| 
-| spine1 | 65511      | 64512 |    1.1.1.11:1 | 1.1.1.11|
-| spine2 | 65512      | 64512 |    1.1.1.12:1 | 1.1.1.12| 
-| spine3 | 65513      | 64512 | 1.1.1.13:1    | 1.1.1.13| 
+
+| Node-name     | Underlay ASN  | Overlay ASN | switch-options RD | lo0.0 IP@| Global EVI RT |
+| ------------- |:-------------:| -----:|-----:| -------------:| -------------:|
+| leaf1      | 65501 | 64512 | 1.1.1.1:1 | 1.1.1.1|target:1:9999|
+| leaf2      | 65502 | 64512   |   1.1.1.2:1 | 1.1.1.2|target:1:9999|
+| leaf3 | 65503      | 64512 |  1.1.1.3:1 | 1.1.1.3|target:1:9999|
+| leaf4 | 65504      | 64512 |   1.1.1.4:1 | 1.1.1.4|target:1:9999| 
+| spine1 | 65511      | 64512 |    1.1.1.11:1 | 1.1.1.11|target:1:8888|
+| spine2 | 65512      | 64512 |    1.1.1.12:1 | 1.1.1.12|target:1:8888|
+| spine3 | 65513      | 64512 | 1.1.1.13:1    | 1.1.1.13|target:1:8888| 
 
 spine1/spine2/spine3 level IRB-VGA configurations: 
 
