@@ -1283,9 +1283,40 @@ Make sure the EVPN type-5 routes dedicated routing-instance has an additional lo
 | ------------- |:-------------:| -----:| -----:|
 | spine1      | 1.1.1.111:1      |  target:64512:1000 | 1.1.1.111/32|
 | spine2      | 1.1.1.112:1      |   target:64512:1000 |1.1.1.112/32|
-| spine3      | 1.1.1.113:1      |  target:64512:1000  |1.1.1.113/32|
+| spine3      | 1.1.1.113:1      |  target:64512:1000  |1.1.1.113/32| 
+
+
+Enable the underlay eBGP peerings between the DC-1 and DC-2 and then the iBGP overlay peerings with evpn signaling: 
 
 ```
+root@spine3# show protocols bgp 
+group dci {
+    type internal;
+    local-address 1.1.1.13;
+    family evpn {
+        signaling;
+    }
+    vpn-apply-export;
+    local-as 64512;
+    neighbor 1.1.1.11;
+    neighbor 1.1.1.12;
+}
+group underlay {
+    type external;
+    export MY_VTEPS;
+    neighbor 10.10.5.1 {
+        peer-as 65511;
+    }
+    neighbor 10.10.6.1 {
+        peer-as 65512;
+    }
+}
+
+{master:0}[edit]
+root@spine3# 
+
+## enabled at spine1/spine2/spine3 the Type5 EVPN routing-instance - different route-distinguisher at each spine but same route-target: 
+
 root@spine3# show routing-instances 
 T5-VRF1 {
     instance-type vrf;
@@ -1314,6 +1345,9 @@ T5-VRF1 {
 
 {master:0}[edit]
 root@spine3# 
+
+## advertise the local irb.x interface as well as a dummy T5 local static route to your iBGP type5 neighbors - this is related to the current JunOS implementation where you need to advertise at least one prefix in order to receive one; 
+
 root@spine3# show policy-options policy-statement TYPE5-POLICY            
 term term1 {
     from {
@@ -1328,31 +1362,7 @@ term term1000 {
 
 {master:0}[edit]
 root@spine3# 
-root@spine3# show protocols bgp 
-group dci {
-    type internal;
-    local-address 1.1.1.13;
-    family evpn {
-        signaling;
-    }
-    vpn-apply-export;
-    local-as 64512;
-    neighbor 1.1.1.11;
-    neighbor 1.1.1.12;
-}
-group underlay {
-    type external;
-    export MY_VTEPS;
-    neighbor 10.10.5.1 {
-        peer-as 65511;
-    }
-    neighbor 10.10.6.1 {
-        peer-as 65512;
-    }
-}
 
-{master:0}[edit]
-root@spine3# 
 root@spine3# show policy-options 
 policy-statement LB {
     term term1 {
@@ -1362,6 +1372,9 @@ policy-statement LB {
         }
     }
 }
+
+## make sure the T5 route-target is added as accepted route-target in the switch-options import policy-statement
+
 policy-statement MY-FABRIC-IMPORT {
     term term1 {
         from community MY-FAB-COMMUNITY;
