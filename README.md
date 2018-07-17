@@ -5,6 +5,16 @@
 ### Lab topology
 ![Lab topology-1](topologies/evpn-vxlan-techfest_topo1.png)
 
+### Lab access ###
+http://ravtrainingportal1-myclass-fjkdcm0e.srv.ravcloud.com/#/login
+
+username: userX (for example user1, user2 etc given at your desk)
+password: Juniper
+
+You can ssh using putty or securecrt using the dns names or IP@ of the routing-engines RE listed in the table
+
+the lab vqfx device access info: 
+`root` and `Juniper1!`
 
 ### Lab objectives
 
