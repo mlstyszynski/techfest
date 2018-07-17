@@ -85,8 +85,13 @@ Here's the access information to your POD : [my_pod_access_info](pod1/README.md)
 
 `L1-task18`: provision at spine1 with an additional regular extended community for the VNI 50100 and make sure the T2 MAC and MAC+IP routes at the leaf3/leaf4 gets the routes with an additional extended community 1:50100
 
-`L1-task19`: enable the IPv4 prefix exchange between DC-1 and DC-2 using EVPN Type-5 signaling and vxlan transport within the routing-instance name T5-VRF1, instance-type vrf. The new EVPN type-5 dedicated routing-instance should be enabled with interfaces irb.x used in the given data center and enabled with new loopback lo0.1 interface; Each Spine should advertise additionally a static discard route as type-5 route; We'll have to explicitly accept also the new route-target at the switch-options level; 
+`L1-task19`: enable the IPv4 prefix exchange between DC-1 and DC-2 using EVPN Type-5 signaling and vxlan transport within the routing-instance name T5-VRF1, instance-type vrf. The new EVPN type-5 dedicated routing-instance should be enabled with interfaces irb.x used in the given data center and enabled with new loopback lo0.1 interface; Each Spine should advertise additionally a static discard route as type-5 route; We'll have to explicitly accept also the new route-target at the switch-options level;
 
+ 
+`L1-task20`: enable the distributed edge routed overlay architecture at the leaf1/leaf2 using the anycast IP gateway irb.151 and irb.152 at the leaf3/leaf4 - make sure the Type-5 evpn routes are used for the reachability advertisement across the DC-1. Use the T5 dedicated VNI 1100 in order to avoid propagating vni 50151 and vni50152 between the two pairs of PODs. 
+
+
+Implementation details: 
 
 The switch-options and protocol evpn configuration are dependent so will need to be configured together in order to have the candidate commit configuration ready. 
 
@@ -108,13 +113,22 @@ The switch-options and protocol evpn configuration are dependent so will need to
 | spine2 | 65512      | 64512 |    1.1.1.12:1 | 1.1.1.12|target:1:8888|
 | spine3 | 65513      | 64512 | 1.1.1.13:1    | 1.1.1.13|target:1:8888| 
 
-spine1/spine2/spine3 level IRB-VGA configurations: 
+spine1/spine2 (irb.100 and irb.101), spine3 (irb.250) level IRB-VGA configurations - centrally routed overlay: 
 
 | VLAN       | VNI           | IRB IP@  | virtual-gateway-address |  virtual-gateway-v4-mac | 
 | ------------- |:-------------:| -----:| -----:| -----:|
 | vlan100      | 50100      | 150.100.1.1, 150.100.1.2 | 150.100.1.254 | 00:00:01:01:00:01|
 | vlan101      | 50101      |  150.101.1.1, 150.101.1.2 | 150.101.1.254 | 00:00:02:02:00:02|
 | vlan250      | 50250      | 150.250.1.1  | 150.250.1.254|   00:00:03:03:03:01|
+
+
+leaf1/leaf2 (irb.151) and leaf3/leaf4 (irb.152) level IRB anycast configuration - edge routed overlay 
+
+| VLAN       | VNI           | IRB IP@  |  IRB mac | 
+| ------------- |:-------------:| -----:| -----:|
+| vlan151      | 50150      | 150.151.1.1| 00:00:31:31:01:01 |
+| vlan152      | 50151      |  150.152.1.1 | 00:00:32:32:02:02 |
+
 
 
 Make sure the EVPN type-5 routes dedicated routing-instance has an additional lo0.1 enabled: 
@@ -125,6 +139,10 @@ Make sure the EVPN type-5 routes dedicated routing-instance has an additional lo
 | spine1      | 1.1.1.111:1      |  target:64512:1000 | 1.1.1.111/32|
 | spine2      | 1.1.1.112:1      |   target:64512:1000 |1.1.1.112/32|
 | spine3      | 1.1.1.113:1      |  target:64512:1000  |1.1.1.113/32|
+|leaf1 |         1.1.111.111:1       | target:64512:1000|  1.1.111.111/32|
+|leaf2 |         1.1.112.112:1        | target:64512:1000|  1.1.112.112/32|  
+|leaf3 |          1.1.113.113:1 |  target:64512:1000 | 1.1.113.113/32|
+|leaf4 |  1.1.114.114:1 | target:64512:1000 | 1.1.114.114/32|
 
 ### Solution guide for EVPN/VXLAN lab ####
 
