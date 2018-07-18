@@ -47,7 +47,6 @@ The underlay eBGP is already pre-provisioned in order to deliver full IP reachab
 
 Use the username: `root` and password: `Juniper1!`
 
-Here's the access information to your POD : [my_pod_access_info](pod1/README.md)
 
 ### Lab tasks
 
