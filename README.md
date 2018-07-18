@@ -361,10 +361,10 @@ root@spine1#
 root@spine1# show protocols evpn 
 vni-options {
     vni 50100 {
-        vrf-target target:1:100;
+        vrf-target export target:1:100;
     }
     vni 50101 {
-        vrf-target target:1:101;
+        vrf-target export target:1:101;
     }
 }
 encapsulation vxlan;
