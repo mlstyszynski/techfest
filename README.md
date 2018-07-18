@@ -50,7 +50,7 @@ Use the username: `root` and password: `Juniper1!`
 
 ### Lab tasks
 
-`L1-task1`: verify the full IPv4 underlay reachability within the  [main topology](topologies/evpn-vxlan-techfest_topo1.png)
+`L1-task1`: verify the full IPv4 underlay reachability within the  [main topology](https://github.com/juniper-dc/techfest#lab-topology)
 
 `L1-task2`: provision and verify the overlay iBGP(spine1/spine2 as overlay route-reflectors)  with EVPN signaling at all DC-1 fabric nodes using the local ASN 64512 as shown on the diagram
 
