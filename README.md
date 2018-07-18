@@ -99,7 +99,7 @@ Here's the access information to your POD : [my_pod_access_info](pod1/README.md)
 
  
 `L1-task20`: enable the distributed edge routed overlay architecture at the leaf1/leaf2 using the anycast IP gateway irb.151 and irb.152 at the leaf3/leaf4 - make sure the Type-5 evpn routes are used for the reachability advertisement across the DC-1. Use the T5 dedicated VNI 1100 in order to avoid propagating vni 50151 and vni50152 between the two pairs of PODs. 
-
+         ![Lab topology-2](topologies/evpn-vxlan-techfest_topo2.png)
 
 Implementation details: 
 
