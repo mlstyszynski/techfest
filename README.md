@@ -33,7 +33,7 @@ The ultimate goal of the present lab is to deliver:
  - L3 inter-vni communication CE-1 VNI-50100 to CE-2 VNI-50101 
  - L3 communication between the DC-1 and DC-2 using EVPN type-5 routes and VXLAN transport 
 
-
+The L1-task20 is introducing the **Edge Routed Bridging Overlay** architecture using the IP anycast IRB approach and the inter-POD EVPN route T5. 
 ### Lab environment
 
 The  environment is composed of the following vqfx nodes: 
@@ -97,7 +97,7 @@ Use the username: `root` and password: `Juniper1!`
 `L1-task19`: enable the IPv4 prefix exchange between DC-1 and DC-2 using EVPN Type-5 signaling and vxlan transport within the routing-instance name T5-VRF1, instance-type vrf. The new EVPN type-5 dedicated routing-instance should be enabled with interfaces irb.x used in the given data center and enabled with new loopback lo0.1 interface; Each Spine should advertise additionally a static discard route as type-5 route; We'll have to explicitly accept also the new route-target at the switch-options level;
 
  
-`L1-task20`: enable the distributed edge routed overlay architecture at the leaf1/leaf2 using the anycast IP gateway irb.151 and irb.152 at the leaf3/leaf4 - make sure the Type-5 evpn routes are used for the reachability advertisement across the DC-1. Use the T5 dedicated VNI 1100 in order to avoid propagating vni 50151 and vni50152 between the two pairs of PODs. 
+`L1-task20`: enable the distributed edge routed overlay architecture at the leaf1/leaf2 using the anycast IP gateway irb.151 and irb.152 at the leaf3/leaf4 - make sure the Type-5 evpn routes are used for the reachability advertisement across the DC-1. Use the T5 dedicated VNI 1100 in order to avoid propagating vni 50151 and vni50152 between the two pairs of PODs. Use the following lab topology for the L1-task20:
          ![Lab topology-2](topologies/evpn-vxlan-techfest_topo2.png)
 
 Implementation details: 
